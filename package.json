@@ -4,9 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prestart": "webpack",
+    "build": "webpack",
+    "prestart": "npm run build",
     "start": "node index.js",
-    "test": "mocha"
+    "test": "mocha",
+    "predocker:build": "npm run build",
+    "docker:build": "docker build -t triliporra . && docker tag triliporra asierba/triliporra",
+    "predeploy:local": "npm run docker:build",
+    "deploy:local": "docker run -p 3000:3000 asierba/triliporra",
+    "predeploy" : "npm run docker:build",
+    "deploy" : "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD && docker push asierba/triliporra"
   },
   "author": "Asier Barrenetxea",
   "license": "ISC",
