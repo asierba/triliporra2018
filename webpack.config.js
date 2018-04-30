@@ -2,7 +2,7 @@ const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  entry: './src/index.js',
+  entry: './src/main.js',
   output: {
       path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js'
@@ -21,7 +21,17 @@ module.exports = {
               use: [
                   'file-loader'
                 ]
+          },
+          {
+            test: /\.js$/,
+            exclude: /node_modules/,
+            use: {
+              loader: 'babel-loader',
+              options: {
+                presets: ['react']
+              }
             }
+          }
       ]
   },
   plugins: [
