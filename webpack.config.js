@@ -9,11 +9,13 @@ module.exports = {
     contentBase: './dist',
     proxy: {
       "/api": "http://localhost:3000"
-    }
+    },
+    historyApiFallback: true
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    publicPath: '/'
   },
   module: {
     rules: [
