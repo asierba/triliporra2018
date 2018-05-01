@@ -4,11 +4,11 @@ import Header from './header';
 import Routes from './routes';
 
 export default function App(props) {
-    return (
+  return (
     <BrowserRouter>
-        <div>
-            <Header/>
-            <Routes/>
+      <div>
+        <Header />
+        <Routes />
       </div>
     </BrowserRouter>);
 }

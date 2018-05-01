@@ -4,9 +4,9 @@ import HomePage from './home/homePage';
 import MatchesPage from './match/matchListPage';
 
 export default function Routes(props) {
-    return (
+  return (
     <div>
-        <Route exact path="/" component={HomePage}/>
-        <Route path="/matches" component={MatchesPage}/>
+      <Route exact path="/" component={HomePage} />
+      <Route path="/matches" component={MatchesPage} />
     </div>);
 }
