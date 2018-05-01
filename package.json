@@ -4,8 +4,6 @@
   "description": "",
   "main": "src/server.js",
   "scripts": {
-    "clean": "rm -rf dist",
-    "prebuild": "npm run clean",
     "build": "webpack",
     "prestart": "npm run build",
     "start": "node src/server.js",
@@ -31,6 +29,7 @@
   "devDependencies": {
     "babel-loader": "^7.1.4",
     "babel-preset-react": "^6.24.1",
+    "clean-webpack-plugin": "^0.1.19",
     "copy-webpack-plugin": "^4.5.1",
     "css-loader": "^0.28.11",
     "file-loader": "^1.1.11",
