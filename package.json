@@ -7,7 +7,9 @@
     "build": "webpack",
     "prestart": "npm run build",
     "start": "node src/server.js",
-    "start:watch": "nodemon -w src/ --exec npm start",
+    "backend:watch": "nodemon --exec node src/server.js",
+    "frontend:watch": "webpack-dev-server --open",
+    "start:watch": "npm run backend:watch | npm run frontend:watch",
     "test": "mocha",
     "test:watch": "mocha -w",
     "predocker:build": "npm run build",
@@ -37,6 +39,7 @@
     "nodemon": "^1.17.3",
     "style-loader": "^0.21.0",
     "webpack": "^4.6.0",
-    "webpack-cli": "^2.0.15"
+    "webpack-cli": "^2.0.15",
+    "webpack-dev-server": "^3.1.3"
   }
 }
