@@ -1,5 +1,12 @@
-body {
-    size: 20px;
-    font-weight: bold;
-    background-repeat: no-repeat;
+nav {
+    border: 1px solid;
+}
+
+nav ul {
+    list-style: none;
+}
+
+nav ul li {
+    display: inline;
+    margin: 10px;
 }
