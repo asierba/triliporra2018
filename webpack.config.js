@@ -1,5 +1,6 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
   entry: './src/main.js',
@@ -39,6 +40,7 @@ module.exports = {
         {
           from: 'src/index.html',
           to: 'index.html'
-        }])
+        }]),
+    new CleanWebpackPlugin(['dist']),
   ]
 };
