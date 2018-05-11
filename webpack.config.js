@@ -50,6 +50,11 @@ module.exports = {
         from: 'src/index.html',
         to: 'index.html'
       }]),
+    new CopyWebpackPlugin([
+      {
+        from: 'src/assets/',
+        to: './'
+      }]),
     new CleanWebpackPlugin(['dist']),
   ]
 };
