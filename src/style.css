@@ -1,16 +1,3 @@
-nav {
-    border: 1px solid;
-}
-
-nav ul {
-    list-style: none;
-}
-
-nav ul li {
-    display: inline;
-    margin: 10px;
-}
-
 #matches input[type="text"] {
   width: 20px;
 }
