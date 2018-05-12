@@ -34,6 +34,15 @@ export default function Header(props) {
               <div className="col-md-10">
                 <div className="sportsmagazine-right-section">
                   <nav className="navbar navbar-default">
+                    <div className="navbar-header">
+                      <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="true">
+                        <span className="sr-only">Toggle navigation</span>
+                        <span className="icon-bar" />
+                        <span className="icon-bar" />
+                        <span className="icon-bar" />
+                      </button>
+                    </div>
+
                     <div className="collapse navbar-collapse" id="navbar-collapse-1">
                       <ul className="nav navbar-nav">
                         <li>
