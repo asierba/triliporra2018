@@ -1,5 +1,6 @@
 import React from 'react';
+import MatchesPage from '../match/matchListPage';
 
 export default function HomePage(props) {
-  return <h1>This is the home page</h1>;
+  return new MatchesPage(props);
 }
