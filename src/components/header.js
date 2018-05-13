@@ -3,7 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 
 export default function Header(props) {
     return (
-
+      
       <header id="sportsmagazine-header" className="sportsmagazine-header-one">
         <div className="sportsmagazine-topstrip">
           <div className="container">

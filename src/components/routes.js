@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route } from "react-router-dom";
 import HomePage from './home/homePage';
-import MatchesPage from './match/matchListPage';
+import MatchesPage from './match/matchesPage';
 
 export default function Routes(props) {
   return (

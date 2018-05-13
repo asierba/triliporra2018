@@ -8,7 +8,6 @@ app.use(bodyParser.json());
 app.use(express.static('dist'));
 
 const matches = require('./matches.json');
-const matchesWithResults = matches.map(x => Object.assign(x, { score: { home: 0, away: 0}}));
 
 app.get('/api/match', (req, res) => {
   const response = { entities: matches };
@@ -19,7 +18,7 @@ app.patch('/api/match/:id', (req, res) => {
   const id = Number(req.params.id);
   const body = req.body;
 
-  const match = matchesWithResults.find(x => x.id === id);
+  const match = matches.find(x => x.id === id);
 
   if (!match) {
     res.status(404);
