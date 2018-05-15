@@ -1,0 +1,16 @@
+.match-row {
+  margin: 10px;
+  background-color: #d8d6d6b8;
+  padding: 10px;
+  border: 1px solid black;
+}
+
+.match-row .score{
+  text-align: center;
+}
+
+.match-row .stage{
+  text-transform: uppercase;
+  font-weight: bold;
+  color: #888686;
+}

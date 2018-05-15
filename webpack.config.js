@@ -52,8 +52,8 @@ module.exports = {
       }]),
     new CopyWebpackPlugin([
       {
-        from: 'src/assets/',
-        to: './'
+        from: 'src/images/',
+        to: 'images/'
       }]),
     new CleanWebpackPlugin(['dist']),
   ]

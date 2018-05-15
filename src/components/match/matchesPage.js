@@ -1,3 +1,4 @@
+import './style.css';
 import React from 'react';
 import MatchRow from './matchRow';
 
@@ -22,18 +23,12 @@ export default class MatchesPage extends React.Component {
 
   render() {
     return (
-    <div id="matches">
-      <h2 className="col-md-12">Upcoming matches</h2>
-      <div className="col-md-12">
-        <div className="sportsmagazine-fixture sportsmagazine-fixture-list">
-          <ul className="row">
-            {this.state.matches.map(x =>
-              <MatchRow match={x}/>
-            )}
-          </ul>
-        </div>
+      <div class="container-fluid">
+        <h2>Upcoming matches</h2>
+        {this.state.matches.map(x =>
+          <MatchRow match={x}/>
+        )}
       </div>
-    </div>
     );
   }
 }
