@@ -16,31 +16,24 @@ function showDate(dateAsString) {
 
 export default function MatchRow(props) {
   const match = props.match;
-  return (<div className="col-md-12">
-    <div className="sportsmagazine-fixture-wrap">
-      <div className="sportsmagazine-teams-match">
-        <div className="sportsmagazine-first-team">
-          <TeamFlag name={match.home}/>
-          <div className="sportsmagazine-first-team-info">
-            <h6>{match.home}</h6>
-          </div>
-        </div>
-        <div className="sportsmagazine-match-view">
-          <h5 class="stage">{match.stage}</h5>
-          <span>{showScore(match.score)}</span>
-        </div>
-        <div className="sportsmagazine-second-team">
-          <TeamFlag name={match.away}/>
-          <div className="sportsmagazine-second-team-info">
-            <h6>{match.away}</h6>
-          </div>
-        </div>
+
+  return (
+    <div class="row align-items-center rounded match-row">
+      <div class="col">
+        <span class="float-right">{match.home} <TeamFlag name={match.home}/></span>
       </div>
-      <div className="sportsmagazine-buy-ticket">
-        <div className="sportsmagazine-buy-ticket-text">
-          <h5>{showDate(match.date)}</h5>
-        </div>
+      <div class="col-1 score">
+        <span>{showScore(match.score)}</span>
+      </div>
+      <div class="col">
+        <TeamFlag name={match.away}/> {match.away}
+      </div>
+      <div class="col">
+        {showDate(match.date)}
+      </div>
+      <div class="col">
+        <span class="float-right stage">{match.stage}</span>
       </div>
     </div>
-  </div>);
+  );
 }
