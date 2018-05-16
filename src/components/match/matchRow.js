@@ -18,21 +18,21 @@ export default function MatchRow(props) {
   const match = props.match;
 
   return (
-    <div class="row align-items-center rounded match-row">
-      <div class="col">
-        <span class="float-right">{match.home} <TeamFlag name={match.home}/></span>
+    <div className="row align-items-center rounded match-row">
+      <div className="col">
+        <span className="float-right">{match.home} <TeamFlag name={match.home}/></span>
       </div>
-      <div class="col-1 score">
+      <div className="col-1 score">
         <span>{showScore(match.score)}</span>
       </div>
-      <div class="col">
+      <div className="col">
         <TeamFlag name={match.away}/> {match.away}
       </div>
-      <div class="col">
+      <div className="col">
         {showDate(match.date)}
       </div>
-      <div class="col">
-        <span class="float-right stage">{match.stage}</span>
+      <div className="col">
+        <span className="float-right stage">{match.stage}</span>
       </div>
     </div>
   );
