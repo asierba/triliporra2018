@@ -5,6 +5,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 module.exports = {
   entry: './src/main.js',
   devtool: 'inline-source-map',
+  mode: 'production',
   devServer: {
     contentBase: './dist',
     proxy: {

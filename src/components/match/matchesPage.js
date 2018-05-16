@@ -23,10 +23,10 @@ export default class MatchesPage extends React.Component {
 
   render() {
     return (
-      <div class="container-fluid">
+      <div className="container-fluid">
         <h2>Upcoming matches</h2>
         {this.state.matches.map(x =>
-          <MatchRow match={x}/>
+          <MatchRow key={x.id} match={x}/>
         )}
       </div>
     );
