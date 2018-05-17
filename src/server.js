@@ -9,21 +9,43 @@ app.use(express.static('dist'));
 
 let matches = require('./matches.json');
 
-const { MongoClient } = require('mongodb');
-const url = 'mongodb://localhost:27017/';
-MongoClient.connect(url, function(err, client) {
-  if (err) return;
+function getAllMatches() {
+  const {MongoClient} = require('mongodb');
+  const url = 'mongodb://localhost:27017/';
+  MongoClient.connect(url, function (err, client) {
+    if (err) return;
 
-  client.db('triliporra').collection('match').find({})
-    .toArray(function (err, result) {
-      matches = result;
-    });
-});
+    const db = client.db('triliporra');
+    db.collection('match').find({})
+      .toArray(function (err, result) {
+        matches = result;
+      });
+  });
+}
+
+getAllMatches();
 
 app.get('/api/match', (req, res) => {
   const response = { entities: matches };
   res.send(response);
 });
+
+function updateMatch(id, score) {
+  const {MongoClient} = require('mongodb');
+  const url = 'mongodb://localhost:27017/';
+  MongoClient.connect(url, function (err, client) {
+    if (err) return;
+
+    const db = client.db('triliporra');
+
+    db.collection('match').updateOne(
+      { id: id },
+      { $set: { score: score }})
+      .then(function(result) {
+        console.log('result',result);
+      });
+  });
+}
 
 app.patch('/api/match/:id', (req, res) => {
   const id = Number(req.params.id);
@@ -38,6 +60,10 @@ app.patch('/api/match/:id', (req, res) => {
   }
 
   match.score = body.score;
+
+  updateMatch(id, body.score);
+
+  getAllMatches();
 
   res.send(match)
 });
