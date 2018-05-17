@@ -7,7 +7,18 @@ app.use(bodyParser.json());
 
 app.use(express.static('dist'));
 
-const matches = require('./matches.json');
+let matches = require('./matches.json');
+
+const { MongoClient } = require('mongodb');
+const url = 'mongodb://localhost:27017/';
+MongoClient.connect(url, function(err, client) {
+  if (err) return;
+
+  client.db('triliporra').collection('match').find({})
+    .toArray(function (err, result) {
+      matches = result;
+    });
+});
 
 app.get('/api/match', (req, res) => {
   const response = { entities: matches };
