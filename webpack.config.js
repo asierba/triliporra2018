@@ -1,6 +1,8 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
 
 module.exports = {
   entry: './src/main.js',
@@ -57,5 +59,6 @@ module.exports = {
         to: 'images/'
       }]),
     new CleanWebpackPlugin(['dist']),
+    // new BundleAnalyzerPlugin()
   ]
 };
