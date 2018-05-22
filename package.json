@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack",
     "prestart": "npm run build",
-    "start": "node src/server.js",
+    "start": "NODE_ENV=production node src/server.js",
     "backend:watch": "nodemon --exec node src/server.js",
     "frontend:watch": "webpack-dev-server --open --mode development",
     "start:watch": "npm run backend:watch | npm run frontend:watch",
