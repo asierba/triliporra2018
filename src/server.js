@@ -11,6 +11,17 @@ app.use(bodyParser.json());
 
 app.use(express.static('dist'));
 
+app.get('/api', (req, res) => {
+  const revision = require('child_process')
+    .execSync('git rev-parse HEAD')
+    .toString()
+    .trim();
+
+  res.send({
+    version : revision
+  })
+});
+
 const connectionString = process.env.CONNECTION_STRING;
 
 app.get('/api/match', (req, res) => {
