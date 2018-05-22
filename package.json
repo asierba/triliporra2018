@@ -15,7 +15,6 @@
     "start:watch": "npm run backend:watch | npm run frontend:watch",
     "test": "mocha",
     "test:watch": "mocha -w",
-    "predocker:build": "npm run build",
     "docker:build": "docker build -t triliporra . && docker tag triliporra asierba/triliporra",
     "predeploy:local": "npm run docker:build",
     "deploy:local": "docker-compose up",
