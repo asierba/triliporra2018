@@ -18,7 +18,8 @@ app.get('/api', (req, res) => {
     .trim();
 
   res.send({
-    version : revision
+    version : revision,
+    links : [ { rel: [ 'matches' ], href: '/api/match' } ]
   })
 });
 
@@ -50,8 +51,15 @@ app.patch('/api/match/:id', (req, res) => {
     db.collection('match').updateOne(
       {id: id},
       {$set: {score: body.score}})
-      .then(function () {
-        res.send('OK');
+      .then(function (result) {
+        let numberOfMatches = result.n;
+        if (!numberOfMatches) {
+          res.status(404);
+          res.send({message:`match with id '${id}' not found`})
+          return;
+        }
+
+        res.send(result);
       });
   });
 
@@ -59,4 +67,6 @@ app.patch('/api/match/:id', (req, res) => {
 
 app.get('/*', (req, res) => res.sendFile(path.join(__dirname, '../dist/index.html')));
 
-app.listen(3000);
+const sever = app.listen(3000);
+
+module.exports = sever;
