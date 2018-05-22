@@ -2,7 +2,7 @@ version: "3"
 services:
   app:
     environment:
-     - CONNECTION_STRING=mongodb://mongo:27017/
+     - CONNECTION_STRING=mongodb://mongo:27017/triliporra
     container_name: triliporra
     restart: always
     build: .
