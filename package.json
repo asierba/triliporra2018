@@ -15,7 +15,7 @@
     "predocker:build": "npm run build",
     "docker:build": "docker build -t triliporra . && docker tag triliporra asierba/triliporra",
     "predeploy:local": "npm run docker:build",
-    "deploy:local": "docker run -p 3000:3000 asierba/triliporra",
+    "deploy:local": "docker-compose up",
     "predeploy": "npm run docker:build",
     "deploy": "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD && docker push asierba/triliporra"
   },
