@@ -1,71 +1,48 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const app = express();
 app.use(bodyParser.json());
 
 app.use(express.static('dist'));
 
-let matches = require('./matches.json');
+const connectionString = process.env.CONNECTION_STRING;
 
-function getAllMatches() {
+app.get('/api/match', (req, res) => {
   const {MongoClient} = require('mongodb');
-  const url = 'mongodb://localhost:27017/';
-  MongoClient.connect(url, function (err, client) {
-    if (err) return;
-
+  MongoClient.connect(connectionString, function (err, client) {
+    if (err) throw err;
     const db = client.db('triliporra');
     db.collection('match').find({})
       .toArray(function (err, result) {
-        matches = result;
+        const response = { entities: result };
+        res.send(response);
       });
   });
-}
-
-getAllMatches();
-
-app.get('/api/match', (req, res) => {
-  const response = { entities: matches };
-  res.send(response);
 });
-
-function updateMatch(id, score) {
-  const {MongoClient} = require('mongodb');
-  const url = 'mongodb://localhost:27017/';
-  MongoClient.connect(url, function (err, client) {
-    if (err) return;
-
-    const db = client.db('triliporra');
-
-    db.collection('match').updateOne(
-      { id: id },
-      { $set: { score: score }})
-      .then(function(result) {
-        console.log('result',result);
-      });
-  });
-}
 
 app.patch('/api/match/:id', (req, res) => {
   const id = Number(req.params.id);
   const body = req.body;
 
-  const match = matches.find(x => x.id === id);
+  const {MongoClient} = require('mongodb');
+  MongoClient.connect(connectionString, function (err, client) {
+    if (err) return;
 
-  if (!match) {
-    res.status(404);
-    res.send("match not found");
-    return;
-  }
+    const db = client.db('triliporra');
 
-  match.score = body.score;
+    db.collection('match').updateOne(
+      {id: id},
+      {$set: {score: body.score}})
+      .then(function () {
+        res.send('OK');
+      });
+  });
 
-  updateMatch(id, body.score);
-
-  getAllMatches();
-
-  res.send(match)
 });
 
 app.get('/*', (req, res) => res.sendFile(path.join(__dirname, '../dist/index.html')));
