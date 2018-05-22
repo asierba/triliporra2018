@@ -33,6 +33,7 @@ app.get('/api/match', (req, res) => {
     db.collection('match').find({})
       .toArray(function (err, result) {
         const response = { entities: result };
+        client.close();
         res.send(response);
       });
   });
@@ -52,13 +53,13 @@ app.patch('/api/match/:id', (req, res) => {
       {id: id},
       {$set: {score: body.score}})
       .then(function (result) {
+        client.close();
         let numberOfMatches = result.n;
         if (!numberOfMatches) {
           res.status(404);
           res.send({message:`match with id '${id}' not found`})
           return;
         }
-
         res.send(result);
       });
   });
