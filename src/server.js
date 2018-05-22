@@ -28,7 +28,7 @@ app.get('/api/match', (req, res) => {
   const {MongoClient} = require('mongodb');
   MongoClient.connect(connectionString, function (err, client) {
     if (err) throw err;
-    const db = client.db('triliporra');
+    const db = client.db();
     db.collection('match').find({})
       .toArray(function (err, result) {
         const response = { entities: result };
@@ -45,7 +45,7 @@ app.patch('/api/match/:id', (req, res) => {
   MongoClient.connect(connectionString, function (err, client) {
     if (err) return;
 
-    const db = client.db('triliporra');
+    const db = client.db();
 
     db.collection('match').updateOne(
       {id: id},
