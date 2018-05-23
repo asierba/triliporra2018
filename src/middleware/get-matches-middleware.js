@@ -1,18 +1,7 @@
-const {MongoClient} = require('mongodb');
+const getMatches = require('../actions/get-matches');
 
 function getMatchesMiddleware(req, res) {
-  const connectionString = process.env.CONNECTION_STRING;
-
-  MongoClient.connect(connectionString, function (err, client) {
-    if (err) throw err;
-    const db = client.db();
-    db.collection('match').find({})
-      .toArray(function (err, result) {
-        const response = {entities: result};
-        client.close();
-        res.send(response);
-      });
-  });
+  getMatches().then(matches => res.send({entities: matches}));
 }
 
 module.exports = getMatchesMiddleware;
