@@ -54,13 +54,14 @@ app.patch('/api/match/:id', (req, res) => {
       {$set: {score: body.score}})
       .then(function (result) {
         client.close();
-        let numberOfMatches = result.n;
-        if (!numberOfMatches) {
+        const numberOfMatches = result.matchedCount;
+        if (numberOfMatches === 0) {
           res.status(404);
-          res.send({message:`match with id '${id}' not found`})
+          res.send({message:`match with id '${id}' not found`});
           return;
         }
-        res.send(result);
+        res.status(204);
+        res.end();
       });
   });
 
