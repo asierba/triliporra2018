@@ -11,61 +11,13 @@ app.use(bodyParser.json());
 
 app.use(express.static('dist'));
 
-app.get('/api', (req, res) => {
-  const revision = require('child_process')
-    .execSync('git rev-parse HEAD')
-    .toString()
-    .trim();
+const getRootMiddleware = require('./middleware/get-root-middleware');
+const getMatchesMiddleware = require('./middleware/get-matches-middleware');
+const patchMatchMiddleware = require('./middleware/patch-match-middleware');
 
-  res.send({
-    version : revision,
-    links : [ { rel: [ 'matches' ], href: '/api/match' } ]
-  })
-});
-
-const connectionString = process.env.CONNECTION_STRING;
-
-app.get('/api/match', (req, res) => {
-  const {MongoClient} = require('mongodb');
-  MongoClient.connect(connectionString, function (err, client) {
-    if (err) throw err;
-    const db = client.db();
-    db.collection('match').find({})
-      .toArray(function (err, result) {
-        const response = { entities: result };
-        client.close();
-        res.send(response);
-      });
-  });
-});
-
-app.patch('/api/match/:id', (req, res) => {
-  const id = Number(req.params.id);
-  const body = req.body;
-
-  const {MongoClient} = require('mongodb');
-  MongoClient.connect(connectionString, function (err, client) {
-    if (err) return;
-
-    const db = client.db();
-
-    db.collection('match').updateOne(
-      {id: id},
-      {$set: {score: body.score}})
-      .then(function (result) {
-        client.close();
-        const numberOfMatches = result.matchedCount;
-        if (numberOfMatches === 0) {
-          res.status(404);
-          res.send({message:`match with id '${id}' not found`});
-          return;
-        }
-        res.status(204);
-        res.end();
-      });
-  });
-
-});
+app.get('/api', getRootMiddleware);
+app.get('/api/match', getMatchesMiddleware);
+app.patch('/api/match/:id', patchMatchMiddleware);
 
 app.get('/*', (req, res) => res.sendFile(path.join(__dirname, '../dist/index.html')));
 
