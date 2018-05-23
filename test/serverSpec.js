@@ -52,7 +52,7 @@ describe('api', () => {
   describe('match patch', () => {
     const randomNumberBetween0and19 = () => Math.floor(Math.random() * 20);
 
-    it.skip('should update the score of a match', () => {
+    it('should update the score of a match', () => {
       const score = { home: randomNumberBetween0and19(), away: randomNumberBetween0and19()};
       return request(server)
           .patch('/api/match/1')

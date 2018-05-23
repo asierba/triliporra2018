@@ -1,31 +1,12 @@
-const {MongoClient} = require('mongodb');
+const updateMatchScore = require('../actions/update-match-score');
 
 function patchMatchMiddleware(req, res) {
-  const connectionString = process.env.CONNECTION_STRING;
-
   const id = Number(req.params.id);
-  const body = req.body;
+  const score = req.body.score;
 
-  MongoClient.connect(connectionString, function (err, client) {
-    if (err) return;
-
-    const db = client.db();
-
-    db.collection('match').updateOne(
-      {id: id},
-      {$set: {score: body.score}})
-      .then(function (result) {
-        client.close();
-        const numberOfMatches = result.matchedCount;
-        if (numberOfMatches === 0) {
-          res.status(404);
-          res.send({message: `match with id '${id}' not found`});
-          return;
-        }
-        res.status(204);
-        res.end();
-      });
-  });
+  updateMatchScore(id, score)
+    .then(() => res.status(204).end())
+    .catch(() => res.status(404).send({message: `match with id '${id}' not found`}));
 }
 
 module.exports = patchMatchMiddleware;

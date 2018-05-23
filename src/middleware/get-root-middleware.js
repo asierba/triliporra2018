@@ -1,13 +1,8 @@
-const childProcess = require('child_process');
+const getVersionNumber = require('../actions/get-version-number');
 
 function getRootMiddleware(req, res) {
-  const revision = childProcess
-    .execSync('git rev-parse HEAD')
-    .toString()
-    .trim();
-
   const response = {
-    version: revision,
+    version: getVersionNumber(),
     links: [{rel: ['matches'], href: '/api/match'}]
   };
   res.send(response)
