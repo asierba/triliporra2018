@@ -50,14 +50,25 @@ describe('api', () => {
 
 
   describe('match patch', () => {
-    it.skip('should update the score of a match', () =>
-      request(server)
-        .patch('/api/match/1')
-        .send({ score: { home: 1, away: 6}})
-        .then(response => {
-          expect(response.status).to.be(200);
-          expect(response.body.score).to.be({ home: 1, away: 6});
-        }));
+    const randomNumberBetween0and19 = () => Math.floor(Math.random() * 20);
+
+    it.skip('should update the score of a match', () => {
+      const score = { home: randomNumberBetween0and19(), away: randomNumberBetween0and19()};
+      return request(server)
+          .patch('/api/match/1')
+          .send({ score: score})
+          .expect(204)
+          .then(_ =>
+            request(server)
+              .get('/api/match')
+              .then(response => {
+                const body = response.body;
+                expect(body.entities[0].id).to.be(1);
+                expect(body.entities[0].score).to.eql(score);
+              })
+          );
+      }
+    );
 
     it('should error when match not found', () =>
       request(server)
