@@ -1,23 +1,7 @@
-const {MongoClient} = require('mongodb');
+const repository = require('../repository');
 
 function updateMatchScore(id, score) {
-  return new Promise((resolve, reject) => {
-    const connectionString = process.env.CONNECTION_STRING;
-
-    MongoClient.connect(connectionString, function (err, client) {
-      client.db().collection('match').updateOne(
-        {id: id},
-        {$set: {score: score}})
-        .then(function (result) {
-          client.close();
-          const numberOfMatchedItems = result.matchedCount;
-          if (numberOfMatchedItems === 0) {
-            reject();
-          }
-          resolve();
-        });
-    });
-  });
+  return repository.update('match', id, {score: score});
 }
 
 module.exports = updateMatchScore;
