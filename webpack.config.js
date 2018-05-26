@@ -5,7 +5,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 
 
 module.exports = {
-  entry: './src/main.js',
+  entry: './src/web/main.js',
   devtool: 'inline-source-map',
   mode: 'production',
   devServer: {
@@ -50,12 +50,12 @@ module.exports = {
   plugins: [
     new CopyWebpackPlugin([
       {
-        from: 'src/index.html',
+        from: 'src/web/index.html',
         to: 'index.html'
       }]),
     new CopyWebpackPlugin([
       {
-        from: 'src/images/',
+        from: 'src/web/images/',
         to: 'images/'
       }]),
     new CleanWebpackPlugin(['dist']),
