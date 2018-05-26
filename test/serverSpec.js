@@ -1,15 +1,23 @@
 const expect = require('expect.js');
 const request = require('supertest');
+const mockery = require('mockery');
+const stubRepository = require('./stubRepository');
 
 describe('api', () => {
   let server;
 
   beforeEach(() => {
+    mockery.enable();
+    mockery.warnOnUnregistered(false);
+    mockery.registerMock('../repository', stubRepository);
+
     server = require('../src/server');
   });
 
   afterEach(() => {
     server.close();
+    mockery.deregisterMock('../repository');
+    mockery.disable();
   })
 
   describe('root', () => {
@@ -38,37 +46,64 @@ describe('api', () => {
   });
 
   describe('match get', () => {
-    it('should return an array of matches', () =>
+    const allMatches = [{
+      id: 1,
+      date: "2018-06-14T15:00:00Z",
+      home: "Catalunya",
+      away: "Euskal Herria",
+      stage: "fictional match"
+    },
+      {
+        id: 2,
+        date: "2018-06-15T15:00:00Z",
+        home: "Wales",
+        away: "Italy",
+        stage: "a match"
+      }];
+
+    beforeEach(() => {
+      stubRepository.init(allMatches);
+    });
+
+    it('should return all matches in the repository', () =>
       request(server)
         .get('/api/match')
-        .then(response => {
-          const body = response.body;
-          expect(body.entities).to.be.an(Array);
-          expect(body.entities[0]).to.have.keys(['date', 'home', 'away', 'stage']);
+        .then(response => response.body)
+        .then(body => {
+          expect(body.entities).to.eql(allMatches);
         }));
   });
 
 
   describe('match patch', () => {
-    const randomNumberBetween0and19 = () => Math.floor(Math.random() * 20);
+    it('should add the score to a match', () => {
+      const matches = [{
+        id: 1,
+        home: "Catalunya",
+        away: "Euskal Herria",
+      }];
+      stubRepository.init(matches);
 
-    it('should update the score of a match', () => {
-      const score = { home: randomNumberBetween0and19(), away: randomNumberBetween0and19()};
+      const score = { home: 5, away: 4};
+
       return request(server)
-          .patch('/api/match/1')
-          .send({ score: score})
-          .expect(204)
-          .then(_ =>
-            request(server)
-              .get('/api/match')
-              .then(response => {
-                const body = response.body;
-                expect(body.entities[0].id).to.be(1);
-                expect(body.entities[0].score).to.eql(score);
-              })
-          );
-      }
-    );
+        .patch('/api/match/1')
+        .send({ score: score})
+        .expect(204)
+        .then(_ =>
+          stubRepository.getAll().then(matches =>
+            expect(matches).to.eql([
+              {
+                id: 1,
+                home: "Catalunya",
+                away: "Euskal Herria",
+                score: {
+                  home: 5,
+                  away: 4
+                }
+              }
+            ])));
+    });
 
     it('should error when match not found', () =>
       request(server)
