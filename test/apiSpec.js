@@ -11,7 +11,7 @@ describe('api', () => {
     mockery.warnOnUnregistered(false);
     mockery.registerMock('../repository', stubRepository);
 
-    server = require('../src/server');
+    server = require('../src/api/server');
   });
 
   afterEach(() => {
