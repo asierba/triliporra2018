@@ -1,10 +1,11 @@
 let matches = [];
 
-const getAll = () => {
+export function getAll() {
   return new Promise(resolve => resolve(matches))
-};
-const update = (entityName, id, dataToUpdate) =>
-  new Promise(resolve => {
+}
+
+export function update(entityName, id, dataToUpdate) {
+  return new Promise(resolve => {
     const match = matches.find(x => x.id === id);
 
     if (match) {
@@ -14,12 +15,8 @@ const update = (entityName, id, dataToUpdate) =>
     }
     reject();
   });
-const init = (data) => {
-  matches = data;
 }
 
-module.exports = {
-  getAll,
-  update,
-  init,
+export function init(data) {
+  matches = data;
 }

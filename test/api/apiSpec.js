@@ -1,7 +1,7 @@
-const expect = require('expect.js');
-const request = require('supertest');
-const mockery = require('mockery');
-const stubRepository = require('./stubRepository');
+import expect from 'expect.js';
+import request from 'supertest';
+import mockery from 'mockery';
+import * as stubRepository from './stubRepository';
 
 describe('api', () => {
   let server;
@@ -11,7 +11,7 @@ describe('api', () => {
     mockery.warnOnUnregistered(false);
     mockery.registerMock('../repository', stubRepository);
 
-    server = require('../src/api/server');
+    server = require('../../src/api/server');
   });
 
   afterEach(() => {
