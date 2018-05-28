@@ -23,7 +23,7 @@ export default function MatchRow(props) {
         <span className="float-right">{match.home} <TeamFlag name={match.home}/></span>
       </div>
       <div className="col-1 score">
-        <span>{showScore(match.score)}</span>
+        <span data-id="score">{showScore(match.score)}</span>
       </div>
       <div className="col">
         <TeamFlag name={match.away}/> {match.away}
