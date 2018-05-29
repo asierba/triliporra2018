@@ -20,19 +20,19 @@ export default function MatchRow(props) {
   return (
     <div className="row align-items-center rounded match-row">
       <div className="col">
-        <span className="float-right">{match.home} <TeamFlag name={match.home}/></span>
+        <span className="float-right"><span data-id="home">{match.home}</span> <TeamFlag name={match.home}/></span>
       </div>
       <div className="col-1 score">
         <span data-id="score">{showScore(match.score)}</span>
       </div>
       <div className="col">
-        <TeamFlag name={match.away}/> {match.away}
+        <TeamFlag name={match.away}/> <span data-id="away">{match.away}</span>
       </div>
       <div className="col">
         {showDate(match.date)}
       </div>
       <div className="col">
-        <span className="float-right stage">{match.stage}</span>
+        <span className="float-right stage" data-id="stage">{match.stage}</span>
       </div>
     </div>
   );

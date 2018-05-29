@@ -1,24 +1,20 @@
 import './style.css';
 import React from 'react';
+import axios from 'axios';
 import MatchRow from './matchRow';
-
-function getMatches() {
-  const url = "/api/match";
-  const xmlHttp = new XMLHttpRequest();
-  const async = false;
-  xmlHttp.open("GET", url, async);
-  xmlHttp.send();
-
-  const response = JSON.parse(xmlHttp.responseText);
-  return response.entities;
-}
 
 export default class MatchesPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      matches: getMatches()
+      matches: []
     };
+  }
+
+  componentDidMount() {
+    axios.get("/api/match")
+      .then(response => response.data.entities)
+      .then(matches => this.setState({matches}));
   }
 
   render() {
