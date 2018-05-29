@@ -1,8 +1,8 @@
 import React from 'react';
 import MatchRow from "../../../../src/web/components/match/matchRow";
 
-const expect = require('expect.js');
-const {shallow} = require('enzyme');
+import expect from 'expect.js';
+import {shallow} from 'enzyme';
 
 describe("MatchRow", () => {
   it('should display "vs" when score not available', () => {
