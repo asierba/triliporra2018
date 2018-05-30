@@ -24,6 +24,7 @@
   "author": "Asier Barrenetxea",
   "license": "ISC",
   "dependencies": {
+    "auth0-js": "^9.6.0",
     "axios": "^0.18.0",
     "body-parser": "^1.18.2",
     "bootstrap": "^4.1.1",
