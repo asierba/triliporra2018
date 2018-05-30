@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, NavLink } from "react-router-dom";
+import Login from './login/login';
 
 export default function Header(props) {
   return (
@@ -22,6 +23,8 @@ export default function Header(props) {
           </li>
         </ul>
       </div>
+
+      <Login></Login>
     </nav>
   );
 };
