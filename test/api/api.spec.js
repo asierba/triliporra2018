@@ -11,6 +11,9 @@ describe('api', () => {
     mockery.warnOnUnregistered(false);
     mockery.registerMock('../repository', stubRepository);
 
+
+    const testPort = 2999;
+    process.env.PORT = testPort;
     server = require('../../src/api/server');
   });
 

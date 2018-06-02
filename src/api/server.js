@@ -19,6 +19,6 @@ app.patch('/api/match/:id', patchMatchMiddleware);
 
 app.get('/*', (req, res) => res.sendFile(path.join(__dirname, '../../dist/index.html')));
 
-const sever = app.listen(3000);
+const sever = app.listen(process.env.PORT || 3000);
 
 module.exports = sever;

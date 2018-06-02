@@ -2,8 +2,7 @@ import React from 'react';
 import MatchesPage from "../../../../src/web/components/match/matchesPage";
 
 import expect from 'expect.js';
-import {shallow, mount} from 'enzyme';
-
+import {mount} from 'enzyme';
 import moxios from 'moxios'
 
 describe("MatchesPage", () => {
@@ -11,8 +10,12 @@ describe("MatchesPage", () => {
     moxios.install();
   });
 
-  it('should display list of all matches', (done) => {
+  afterEach(() => {
+    moxios.uninstall();
+  });
 
+
+  it('should display list of all matches', (done) => {
     const matches = [
       {
         id: 1,
@@ -46,9 +49,7 @@ describe("MatchesPage", () => {
       expect(matchesPage.find('[data-id="away"]').at(1).text()).to.be('Italy');
       expect(matchesPage.find('[data-id="stage"]').at(1).text()).to.be('group B');
 
-      moxios.uninstall();
       done();
     });
   });
-
 });
