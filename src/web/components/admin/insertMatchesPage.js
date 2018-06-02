@@ -1,79 +1,28 @@
 import React from 'react';
+import axios from 'axios';
+import InsertMatchRow from './insertMatchRow';
 
-function getMatches() {
-  const url = "/api/match";
-  const xmlHttp = new XMLHttpRequest();
-  const async = false;
-  xmlHttp.open("GET", url, async);
-  xmlHttp.send();
-
-  const response = JSON.parse(xmlHttp.responseText);
-  return response.entities;
-}
-
-function addScore(matches) {
-  return matches.map(x => Object.assign({score: {}}, x));
-}
-
-function showDate(dateAsString) {
-  let date = new Date(dateAsString);
-  var options = {month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric'};
-  return date.toLocaleString('en-US', options);
+function withScore(matches) {
+  const addEmptyScoreIfNotPresent = match => Object.assign({score: {}}, match);
+  return matches.map(addEmptyScoreIfNotPresent);
 }
 
 export default class InsertMatchesPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      matches: addScore(getMatches())
+      matches: []
     };
   }
 
-  changeScore(matchId, type, event) {
-    const value = event.target.value;
-
-    const matches = this.state.matches.map(match => {
-      if (match.id === matchId) {
-        match.score[type] = value;
-      }
-      return match;
-    })
-
-
-    this.setState({matches});
-  }
-
-  onSave(match) {
-    const url = `/api/match/${match.id}`;
-    const xmlHttp = new XMLHttpRequest();
-    const async = true;
-    xmlHttp.open("PATCH", url, async);
-    xmlHttp.setRequestHeader("Content-type", "application/json");
-    let matchDATA = {
-      score : {
-        home: match.score.home,
-        away: match.score.away
-      }
-    };
-    xmlHttp.send(JSON.stringify(matchDATA));
+  componentDidMount() {
+    axios.get("/api/match")
+      .then(response => response.data.entities)
+      .then(withScore)
+      .then(matches => this.setState({matches}));
   }
 
   render() {
-    const inputStyle = {
-      width: "30px"
-    }
-
-    const tr = (match) =>
-      (<tr key={match.id}>
-        <td>{match.home} vs {match.away}</td>
-        <td>
-          <input type="text" style={inputStyle} value={match.score.home} onChange={this.changeScore.bind(this, match.id, 'home')}/> -
-           <input type="text" style={inputStyle} value={match.score.away} onChange={this.changeScore.bind(this, match.id, 'away')}/>
-        </td>
-        <td>{showDate(match.date)}</td>
-        <td><input type="submit" value="Save" className="btn btn-primary" onClick={this.onSave.bind(this, match)}/></td>
-      </tr>);
-
     return (
       <table className="table">
         <thead>
@@ -84,7 +33,8 @@ export default class InsertMatchesPage extends React.Component {
         </tr>
         </thead>
         <tbody>
-          {this.state.matches.map(tr)}
+          {this.state.matches.map(match =>
+            <InsertMatchRow key={match.id} match={match}/>)}
         </tbody>
       </table>
     );
