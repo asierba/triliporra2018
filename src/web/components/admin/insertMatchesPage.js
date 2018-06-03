@@ -1,6 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 import InsertMatchRow from './insertMatchRow';
+import { Redirect } from 'react-router';
+import Auth from '../../Auth';
 
 function withScore(matches) {
   const addEmptyScoreIfNotPresent = match => Object.assign({score: {}}, match);
@@ -11,8 +13,17 @@ export default class InsertMatchesPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      matches: []
+      matches: [],
+      isAdmin: true,
     };
+
+
+    new Auth().isAdmin().then(isAdmin => {
+      this.setState( {
+        matches: this.state.matches,
+        isAdmin: isAdmin,
+      });
+    });
   }
 
   componentDidMount() {
@@ -23,8 +34,12 @@ export default class InsertMatchesPage extends React.Component {
   }
 
   render() {
+    if (!this.state.isAdmin) {
+      return <Redirect to="/"/>;
+    }
+
     return (
-      <table className="table">
+      <table data-id="insert-matches" className="table">
         <thead>
         <tr>
           <th scope="col">Match</th>
