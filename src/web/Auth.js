@@ -9,7 +9,7 @@ export default class Auth {
       redirectUri: `${rootUrl}/callback`,
       audience: 'https://trilita.eu.auth0.com/userinfo',
       responseType: 'token id_token',
-      scope: 'openid'
+      scope: 'openid profile'
     });
   }
 
@@ -45,5 +45,25 @@ export default class Auth {
   isAuthenticated() {
     let expiresAt = JSON.parse(localStorage.getItem('expires_at'));
     return new Date().getTime() < expiresAt;
+  }
+
+  getProfile(cb) {
+    let accessToken = localStorage.getItem('access_token');
+    if (!accessToken) {
+      cb("no token", {});
+      return;
+    }
+    this.auth0.client.userInfo(accessToken, (err, profile) => {
+      cb(err, profile);
+    });
+  }
+
+  isAdmin() {
+    return new Promise(resolve => {
+      this.getProfile( (err, profile) => {
+        const isAdmin = profile['https://trilita.com/roles'].some(x => x == 'Admin');
+        resolve(isAdmin);
+      });
+    });
   }
 }
