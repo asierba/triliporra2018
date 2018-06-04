@@ -30,7 +30,7 @@ export default class Auth {
   }
 
   setSession(authResult) {
-    let expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
+    const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
     localStorage.setItem('access_token', authResult.accessToken);
     localStorage.setItem('id_token', authResult.idToken);
     localStorage.setItem('expires_at', expiresAt);
@@ -43,27 +43,35 @@ export default class Auth {
   }
 
   isAuthenticated() {
-    let expiresAt = JSON.parse(localStorage.getItem('expires_at'));
+    const expiresAt = JSON.parse(localStorage.getItem('expires_at'));
     return new Date().getTime() < expiresAt;
   }
 
-  getProfile(cb) {
-    let accessToken = localStorage.getItem('access_token');
-    if (!accessToken) {
-      cb("no token", {});
-      return;
-    }
-    this.auth0.client.userInfo(accessToken, (err, profile) => {
-      cb(err, profile);
+  getProfile() {
+    return new Promise((resolve, reject) => {
+      const accessToken = localStorage.getItem('access_token');
+      if (!accessToken) {
+        reject();
+        return;
+      }
+
+      this.auth0.client.userInfo(accessToken, (err, profile) => {
+        if (err) {
+          reject();
+          return;
+        }
+
+        resolve(profile);
+      });
     });
   }
 
   isAdmin() {
-    return new Promise(resolve => {
-      this.getProfile( (err, profile) => {
+    return this.getProfile()
+      .then((profile) => {
         const isAdmin = profile['https://trilita.com/roles'].some(x => x == 'Admin');
-        resolve(isAdmin);
-      });
-    });
+        return isAdmin;
+      })
+      .catch(() => false);
   }
 }
