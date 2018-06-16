@@ -8,13 +8,15 @@ proxyquire.noCallThru();
 
 function authForLoggedInUser() {
   return {
-    isAuthenticated: () => true
+    isAuthenticated: () => true,
+    getUserId: () => Promise.resolve(12345)
   }
 }
 
 function authForNoLoggedInUser() {
   return {
-    isAuthenticated: () => false
+    isAuthenticated: () => false,
+    getUserId: () => Promise.reject('no access token')
   }
 }
 
@@ -68,8 +70,8 @@ describe('profilePage', () => {
       });
     });
 
-    it('should show the profile page', () => {
-      expect(matchesPage.find('[data-id="profile-page"]').length).to.be(1);
+    it('should show the user id', () => {
+      expect(matchesPage.find('[data-id="user-id"]').at(0).text()).to.be('12345');
     });
   });
 });

@@ -51,13 +51,13 @@ export default class Auth {
     return new Promise((resolve, reject) => {
       const accessToken = localStorage.getItem('access_token');
       if (!accessToken) {
-        reject();
+        reject('no access token');
         return;
       }
 
       this.auth0.client.userInfo(accessToken, (err, profile) => {
         if (err) {
-          reject();
+          reject(error);
           return;
         }
 
@@ -66,9 +66,13 @@ export default class Auth {
     });
   }
 
+  getUserId() {
+    return this.getProfile().then(profile => profile.sub);
+  }
+
   isAdmin() {
     return this.getProfile()
-      .then((profile) => {
+      .then(profile => {
         const isAdmin = profile['https://trilita.com/roles'].some(x => x == 'Admin');
         return isAdmin;
       })
