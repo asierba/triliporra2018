@@ -1,7 +1,8 @@
 import expect from 'expect.js';
-import * as stubRepository from "./stubRepository";
+import * as stubRepository from "./helpers/stubRepository";
 import mockery from "mockery";
 import request from "supertest";
+import createTestServer from './helpers/createTestServer';
 
 describe('user', () => {
   let server;
@@ -28,9 +29,7 @@ describe('user', () => {
     mockery.registerMock('../repository', stubRepository);
 
 
-    const testPort = 2999;
-    process.env.PORT = testPort;
-    server = require('../../src/api/server');
+    server = createTestServer();
 
     stubRepository.setMatches(allMatches);
   });
