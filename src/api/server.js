@@ -12,10 +12,13 @@ app.use(express.static('dist'));
 const getRootMiddleware = require('./middleware/get-root-middleware');
 const getMatchesMiddleware = require('./middleware/get-matches-middleware');
 const patchMatchMiddleware = require('./middleware/patch-match-middleware');
+const userMiddleware = require('./middleware/get-user-middleware');
+
 
 app.get('/api', getRootMiddleware);
 app.get('/api/match', getMatchesMiddleware);
 app.patch('/api/match/:id', patchMatchMiddleware);
+app.get('/api/user/:id', userMiddleware);
 
 app.get('/*', (req, res) => res.sendFile(path.join(__dirname, '../../dist/index.html')));
 

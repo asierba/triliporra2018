@@ -1,7 +1,26 @@
 let matches = [];
+export function setMatches(data) {
+  matches = data;
+}
 
-export function getAll() {
-  return new Promise(resolve => resolve(matches))
+let matchPredictions = [];
+export function setPredictions(data) {
+  matchPredictions = data;
+}
+
+export function getAll(entityName) {
+  return new Promise((resolve, reject) => {
+    if (entityName === 'match') {
+      resolve(matches);
+      return;
+    }
+
+    if (entityName === 'match-predictions') {
+      resolve(matchPredictions);
+      return;
+    }
+    reject();
+  })
 }
 
 export function update(entityName, id, dataToUpdate) {
@@ -17,6 +36,3 @@ export function update(entityName, id, dataToUpdate) {
   });
 }
 
-export function init(data) {
-  matches = data;
-}

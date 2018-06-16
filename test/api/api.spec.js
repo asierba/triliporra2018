@@ -21,7 +21,7 @@ describe('api', () => {
     server.close();
     mockery.deregisterMock('../repository');
     mockery.disable();
-  })
+  });
 
   describe('root', () => {
     it('should return 200', () =>
@@ -37,13 +37,14 @@ describe('api', () => {
           expect(body).to.have.key('version');
         }));
 
-    it('should have link to matches', () =>
+    it('should have link to matches and users', () =>
       request(server)
         .get('/api')
         .then(response => {
           const body = response.body;
           expect(body.links).to.eql([
-            {'rel': ["matches"], "href": "/api/match"}
+            {'rel': ["matches"], "href": "/api/match"},
+            {'rel': ["users"], "href": "/api/user"}
           ]);
         }));
   });
@@ -65,7 +66,7 @@ describe('api', () => {
       }];
 
     beforeEach(() => {
-      stubRepository.init(allMatches);
+      stubRepository.setMatches(allMatches);
     });
 
     it('should return all matches in the repository', () =>
@@ -85,7 +86,7 @@ describe('api', () => {
         home: "Catalunya",
         away: "Euskal Herria",
       }];
-      stubRepository.init(matches);
+      stubRepository.setMatches(matches);
 
       const score = { home: 5, away: 4};
 
@@ -94,7 +95,7 @@ describe('api', () => {
         .send({ score: score})
         .expect(204)
         .then(_ =>
-          stubRepository.getAll().then(matches =>
+          stubRepository.getAll('match').then(matches =>
             expect(matches).to.eql([
               {
                 id: 1,
