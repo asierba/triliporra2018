@@ -40,12 +40,26 @@ describe('user', () => {
     mockery.disable();
   });
 
+  it('should have action to update match prediction', () =>
+    request(server)
+      .get('/api/user/5')
+      .then(response => response.body)
+      .then(body => {
+        expect(body.actions).to.eql([
+          {
+            "name": "predict match",
+            "method": "PATCH",
+            "href": "/api/user/5/match"
+          }
+        ]);
+      }));
+
   it('should have user id', () =>
     request(server)
       .get('/api/user/5')
       .then(response => response.body)
       .then(body => {
-        expect(body.id).to.eql(5);
+        expect(body.properties.id).to.eql(5);
       }));
 
   it('should have matches', () =>
@@ -53,7 +67,7 @@ describe('user', () => {
       .get('/api/user/5')
       .then(response => response.body)
       .then(body => {
-        expect(body.matches).to.eql(allMatches);
+        expect(body.properties.matches).to.eql(allMatches);
       }));
 
   describe('with match predictions', () => {
@@ -70,9 +84,9 @@ describe('user', () => {
     it('should have match predictions for that user', () =>
       request(server)
         .get('/api/user/5')
-        .then(response => response.body)
-        .then(body => {
-          expect(body.matches).to.eql([{
+        .then(response => response.body.properties.matches)
+        .then(matches => {
+          expect(matches).to.eql([{
             id: 1,
             date: "2018-06-14T15:00:00Z",
             home: "Catalunya",
