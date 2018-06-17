@@ -14,3 +14,8 @@
   font-weight: bold;
   color: #888686;
 }
+
+.match-today {
+  border: 3px solid;
+  background-color: rgba(0,123,255,.25);
+}

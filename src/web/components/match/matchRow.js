@@ -9,16 +9,24 @@ function showScore(score) {
 }
 
 function showDate(dateAsString) {
-  let date = new Date(dateAsString);
+  const date = new Date(dateAsString);
   var options = {month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric'};
   return date.toLocaleString('en-US', options);
+}
+
+function isToday(dateAsString) {
+  const date = new Date(dateAsString);
+  const now = new Date();
+
+  return date.setHours(0,0,0,0) == now.setHours(0,0,0,0);
 }
 
 export default function MatchRow(props) {
   const match = props.match;
 
   return (
-    <div className="row align-items-center rounded match-row">
+    <div className={"row align-items-center rounded match-row " +
+      (isToday(match.date) ? "match-today":"")} >
       <div className="col">
         <span className="float-right"><span data-id="home">{match.home}</span> <TeamFlag name={match.home}/></span>
       </div>
