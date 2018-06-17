@@ -15,24 +15,40 @@ export function getAll(entityName) {
       return;
     }
 
-    if (entityName === 'match-predictions') {
+    if (entityName === 'match-prediction') {
       resolve(matchPredictions);
       return;
     }
-    reject();
+    reject('getall failed');
   })
 }
 
-export function update(entityName, id, dataToUpdate) {
-  return new Promise(resolve => {
-    const match = matches.find(x => x.id === id);
+export function update(entityName, query, dataToUpdate, upsert=false) {
+  let items;
+  if (entityName === 'match-prediction') {
+    items = matchPredictions;
+  } else {
+    items = matches;
+  }
 
-    if (match) {
-      Object.assign(match, dataToUpdate);
-      resolve();
-      return;
+  return new Promise((resolve, reject) => {
+    const item = items.find(x => Object.keys(query).every(key => query[key] === x[key]));
+
+    if (item) {
+      Object.assign(item, dataToUpdate);
+    } else {
+
+      if (upsert === false) {
+        reject(`update '${entityName}' failed`)
+        return;
+      }
+
+      const newItem = Object.assign({}, query, dataToUpdate);
+      items.push(newItem);
     }
-    reject();
+
+    resolve();
+    return;
   });
 }
 

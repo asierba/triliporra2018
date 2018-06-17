@@ -15,7 +15,7 @@ function addPrediction(match, matchPredictions, userId) {
 function getUser(id) {
   return new Promise(resolve => {
     Promise.all([
-      repository.getAll('match-predictions'),
+      repository.getAll('match-prediction'),
       repository.getAll('match')
     ]).then(results => {
       const [matchPredictions, matches] = results;
