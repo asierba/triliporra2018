@@ -40,20 +40,6 @@ describe('user', () => {
     mockery.disable();
   });
 
-  it('should have action to update match prediction', () =>
-    request(server)
-      .get('/api/user/5')
-      .then(response => response.body)
-      .then(body => {
-        expect(body.actions).to.eql([
-          {
-            "name": "predict match",
-            "method": "PATCH",
-            "href": "/api/user/5/match"
-          }
-        ]);
-      }));
-
   it('should have user id', () =>
     request(server)
       .get('/api/user/5')
@@ -69,6 +55,30 @@ describe('user', () => {
       .then(body => {
         expect(body.properties.matches).to.eql(allMatches);
       }));
+
+  it('should have action to update match prediction', () =>
+    request(server)
+      .get('/api/user/5')
+      .then(response => response.body)
+      .then(body => {
+        expect(body.actions).to.eql([
+          {
+            "name": "predict match",
+            "method": "PATCH",
+            "href": "/api/user/5/match" // TODO URL
+          }
+        ]);
+      }));
+
+  it('should be able to introduce a match prediction', () =>
+    request(server)
+      .patch('/api/user/5/match/1')
+      .send({ prediction: "away"})
+      .expect(204)
+      .then(() =>
+        stubRepository.getAll('match-prediction').then(matchPredictions =>
+          expect(matchPredictions.find(x => x.userId === 5).prediction).to.eql("away"))));
+
 
   describe('with match predictions', () => {
     beforeEach(() => {
@@ -103,5 +113,14 @@ describe('user', () => {
               prediction: 'draw'
             }]);
         }));
+
+    it('should be able to update a match prediction', () =>
+      request(server)
+        .patch('/api/user/5/match/1')
+        .send({ prediction: "away"})
+        .expect(204)
+        .then(() =>
+          stubRepository.getAll('match-prediction').then(matchPredictions =>
+            expect(matchPredictions.find(x => x.userId === 5).prediction).to.eql("away"))));
   });
 });

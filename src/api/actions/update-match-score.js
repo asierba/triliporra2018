@@ -1,7 +1,7 @@
 const repository = require('../repository');
 
 function updateMatchScore(id, score) {
-  return repository.update('match', id, {score: score});
+  return repository.update('match', {id: id}, {score: score});
 }
 
 module.exports = updateMatchScore;

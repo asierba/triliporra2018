@@ -92,7 +92,7 @@ describe('api', () => {
         .patch('/api/match/1')
         .send({ score: score})
         .expect(204)
-        .then(_ =>
+        .then(() =>
           stubRepository.getAll('match').then(matches =>
             expect(matches).to.eql([
               {
