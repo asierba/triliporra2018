@@ -6,10 +6,10 @@ import proxyquire from 'proxyquire';
 
 proxyquire.noCallThru();
 
-function authForLoggedInUser() {
+const authForLoggedInUser = (userId) => () => {
   return {
     isAuthenticated: () => true,
-    getUserId: () => Promise.resolve(12345)
+    getUserId: () => Promise.resolve(userId)
   }
 }
 
@@ -55,23 +55,52 @@ describe('profilePage', () => {
   });
 
   describe('When User is logged in', () => {
-    let matchesPage;
+    let profilePage;
 
     beforeEach((done) => {
       const ProfilePage = proxyquire("../../../../src/web/components/profile/profilePage", {
-        '../../Auth': authForLoggedInUser
+        '../../Auth': authForLoggedInUser(678)
       }).default;
 
-      matchesPage = mount(<ProfilePage />);
+      const matches = [
+        {
+          id: 1,
+          home: 'Brazil',
+          away: 'Russia',
+          stage: 'group A'
+        },
+        {
+          id: 2,
+          home: 'France',
+          away: 'Italy',
+          stage: 'group B'
+        }];
 
-      setImmediate(() => {
-        matchesPage.update();
-        done();
+      moxios.stubRequest('/api/user/678', {
+        responseText: JSON.stringify({
+          properties: {
+            matches
+          }
+        })
       });
+
+      profilePage = mount(<ProfilePage />);
+
+      setImmediate(done);
     });
 
-    it('should show the user id', () => {
-      expect(matchesPage.find('[data-id="user-id"]').at(0).text()).to.be('12345');
+    it('should display list of all matches', () => {
+      profilePage.update();
+
+      expect(profilePage.find('[data-id="home"]').length).to.be(2);
+
+      expect(profilePage.find('[data-id="home"]').at(0).text()).to.be('Brazil');
+      expect(profilePage.find('[data-id="away"]').at(0).text()).to.be('Russia');
+      expect(profilePage.find('[data-id="stage"]').at(0).text()).to.be('group A');
+
+      expect(profilePage.find('[data-id="home"]').at(1).text()).to.be('France');
+      expect(profilePage.find('[data-id="away"]').at(1).text()).to.be('Italy');
+      expect(profilePage.find('[data-id="stage"]').at(1).text()).to.be('group B');
     });
   });
 });
