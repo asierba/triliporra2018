@@ -3,6 +3,7 @@ import expect from 'expect.js';
 import {mount} from 'enzyme';
 import moxios from 'moxios'
 import proxyquire from 'proxyquire';
+const profilePagePath = "../../../../src/web/components/profile/profilePage";
 
 proxyquire.noCallThru();
 
@@ -34,7 +35,7 @@ describe('profilePage', () => {
     let redirectTo;
 
     beforeEach((done) => {
-      const ProfilePage = proxyquire("../../../../src/web/components/profile/profilePage", {
+      const ProfilePage = proxyquire(profilePagePath, {
         '../../Auth': authForNoLoggedInUser,
         'react-router':  {
           Redirect: (props) => {
@@ -56,10 +57,11 @@ describe('profilePage', () => {
 
   describe('When User is logged in', () => {
     let profilePage;
+    const userId = 678;
 
     beforeEach((done) => {
-      const ProfilePage = proxyquire("../../../../src/web/components/profile/profilePage", {
-        '../../Auth': authForLoggedInUser(678)
+      const ProfilePage = proxyquire(profilePagePath, {
+        '../../Auth': authForLoggedInUser(userId)
       }).default;
 
       const matches = [
@@ -67,16 +69,22 @@ describe('profilePage', () => {
           id: 1,
           home: 'Brazil',
           away: 'Russia',
-          stage: 'group A'
+          stage: 'group A',
+          score: {
+            home: 1,
+            away: 0
+          },
+          prediction: 'home'
         },
         {
           id: 2,
           home: 'France',
           away: 'Italy',
-          stage: 'group B'
+          stage: 'group B',
+          prediction: 'away'
         }];
 
-      moxios.stubRequest('/api/user/678', {
+      moxios.stubRequest(`/api/user/${userId}`, {
         responseText: JSON.stringify({
           properties: {
             matches
@@ -86,11 +94,13 @@ describe('profilePage', () => {
 
       profilePage = mount(<ProfilePage />);
 
-      setImmediate(done);
+      setImmediate(() => {
+        profilePage.update();
+        done();
+      });
     });
 
     it('should display list of all matches', () => {
-      profilePage.update();
 
       expect(profilePage.find('[data-id="home"]').length).to.be(2);
 
@@ -101,6 +111,33 @@ describe('profilePage', () => {
       expect(profilePage.find('[data-id="home"]').at(1).text()).to.be('France');
       expect(profilePage.find('[data-id="away"]').at(1).text()).to.be('Italy');
       expect(profilePage.find('[data-id="stage"]').at(1).text()).to.be('group B');
+    });
+
+    it('should display predictions', () => {
+      expect(profilePage.find('[data-id="prediction"]').at(0).props().value).to.be('home');
+      expect(profilePage.find('[data-id="prediction"]').at(1).props().value).to.be('away');
+    });
+
+    it('should let update predictions', (done) => {
+      profilePage.find('[data-id="prediction"]').at(0).simulate('change', { target: { value: 'draw' } });
+
+      setImmediate(() => {
+        const request = moxios.requests.mostRecent();
+        expect(request.url).to.eql(`/api/user/${userId}/match/1`);
+        expect(request.config.data).to.eql(JSON.stringify({prediction: "draw"}));
+        done();
+      });
+    });
+
+    it('should let update predictions 2', (done) => {
+      profilePage.find('[data-id="prediction"]').at(1).simulate('change', { target: { value: 'home' } });
+
+      setImmediate(() => {
+        const request = moxios.requests.mostRecent();
+        expect(request.url).to.eql(`/api/user/${userId}/match/2`);
+        expect(request.config.data).to.eql(JSON.stringify({prediction: "home"}));
+        done();
+      });
     });
   });
 });

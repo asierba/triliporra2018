@@ -1,5 +1,8 @@
 import auth0 from 'auth0-js';
 
+const subStringAfter = (char) => (string) => string.split(char).slice(-1);
+const subStringAfterPipe = (string) => subStringAfter('|')(string);
+
 export default class Auth {
   constructor() {
     const rootUrl = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
@@ -67,7 +70,9 @@ export default class Auth {
   }
 
   getUserId() {
-    return this.getProfile().then(profile => profile.sub);
+    return this.getProfile()
+      .then(profile => profile.sub)
+      .then(subStringAfterPipe);
   }
 
   isAdmin() {
