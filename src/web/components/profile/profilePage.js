@@ -41,7 +41,7 @@ export default class MatchesPage extends React.Component {
         <div className="container-fluid">
           <h2>Predictions</h2>
           {this.state.matches.map(x =>
-            <MatchRow key={x.id} match={x}/>
+            <MatchRow key={x.id} match={x} enablePrediction={true} userId={this.state.userId}/>
           )}
         </div>
       </div>
