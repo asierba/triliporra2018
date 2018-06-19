@@ -51,7 +51,7 @@ export default class MatchRow extends React.Component {
     const userId = this.state.userId;
 
     return (
-      <div className={"row align-items-center rounded match-row" +
+      <div className={"row align-items-center rounded match-row " +
       (isToday(match.date) ? "match-today" : "")}>
         <div className="col">
           <span className="float-right"><span data-id="home">{match.home}</span> <TeamFlag name={match.home}/></span>
