@@ -22,6 +22,31 @@ function isToday(dateAsString) {
   return date.setHours(0,0,0,0) == now.setHours(0,0,0,0);
 }
 
+function getScoreResult(score) {
+  if(score.home > score.away) {
+    return "home";
+  }
+  if(score.home < score.away) {
+    return "away";
+  }
+  return "draw";
+}
+
+function showPredictionResult(match) {
+  const noResult = <span data-id="prediction-result"></span>;
+  const guessedResult = <i className="fas fa-check-circle" data-id="prediction-result"></i>;
+  const missedResult = <i className="fas fa-times-circle" data-id="prediction-result"></i>;
+
+  if (!match.score || !match.prediction) {
+    return noResult;
+  }
+
+  if (getScoreResult(match.score) === match.prediction) {
+    return guessedResult;
+  }
+  return missedResult;
+}
+
 export default class MatchRow extends React.Component {
   constructor(props) {
     super(props);
@@ -76,6 +101,7 @@ export default class MatchRow extends React.Component {
             <option value="draw">draw</option>
             <option value="away">{match.away}</option>
           </select>
+          {showPredictionResult(match)}
         </div>
       </div>
     );

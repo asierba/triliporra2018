@@ -81,8 +81,30 @@ describe('profilePage', () => {
           home: 'France',
           away: 'Italy',
           stage: 'group B',
+          prediction: 'away',
+          score: {
+            home: 3,
+            away: 2
+          },
+        },
+        {
+          id: 3,
+          home: 'A',
+          away: 'B',
+          stage: 'group X',
           prediction: 'away'
-        }];
+        },
+        {
+          id: 4,
+          home: 'C',
+          away: 'D',
+          stage: 'group X',
+          score: {
+            home: 3,
+            away: 2
+          },
+        }
+      ];
 
       moxios.stubRequest(`/api/user/${userId}`, {
         responseText: JSON.stringify({
@@ -101,9 +123,6 @@ describe('profilePage', () => {
     });
 
     it('should display list of all matches', () => {
-
-      expect(profilePage.find('[data-id="home"]').length).to.be(2);
-
       expect(profilePage.find('[data-id="home"]').at(0).text()).to.be('Brazil');
       expect(profilePage.find('[data-id="away"]').at(0).text()).to.be('Russia');
       expect(profilePage.find('[data-id="stage"]').at(0).text()).to.be('group A');
@@ -118,26 +137,28 @@ describe('profilePage', () => {
       expect(profilePage.find('[data-id="prediction"]').at(1).props().value).to.be('away');
     });
 
-    it('should let update predictions', (done) => {
-      profilePage.find('[data-id="prediction"]').at(0).simulate('change', { target: { value: 'draw' } });
+    [
+      {elementIndex: 0, id: 1, prediction: 'draw' },
+      {elementIndex: 1, id: 2, prediction: 'home' },
+    ].forEach(data => {
+      const {elementIndex, id, prediction } = data;
+      it('should let update predictions', (done) => {
+        profilePage.find('[data-id="prediction"]').at(elementIndex).simulate('change', { target: { value: prediction } });
 
-      setImmediate(() => {
-        const request = moxios.requests.mostRecent();
-        expect(request.url).to.eql(`/api/user/${userId}/match/1`);
-        expect(request.config.data).to.eql(JSON.stringify({prediction: "draw"}));
-        done();
+        setImmediate(() => {
+          const request = moxios.requests.mostRecent();
+          expect(request.url).to.eql(`/api/user/${userId}/match/${id}`);
+          expect(request.config.data).to.eql(JSON.stringify({prediction: prediction}));
+          done();
+        });
       });
     });
 
-    it('should let update predictions 2', (done) => {
-      profilePage.find('[data-id="prediction"]').at(1).simulate('change', { target: { value: 'home' } });
-
-      setImmediate(() => {
-        const request = moxios.requests.mostRecent();
-        expect(request.url).to.eql(`/api/user/${userId}/match/2`);
-        expect(request.config.data).to.eql(JSON.stringify({prediction: "home"}));
-        done();
-      });
+    it('should show guessed or missed status of prediction', () => {
+      expect(profilePage.find('[data-id="prediction-result"]').at(0).props().className).to.contain('fa-check-circle');
+      expect(profilePage.find('[data-id="prediction-result"]').at(1).props().className).to.contain('fa-times-circle');
+      expect(profilePage.find('[data-id="prediction-result"]').at(2).props().className).to.be(undefined);
+      expect(profilePage.find('[data-id="prediction-result"]').at(3).props().className).to.be(undefined);
     });
   });
 });
