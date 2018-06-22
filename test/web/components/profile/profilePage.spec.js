@@ -92,7 +92,11 @@ describe('profilePage', () => {
           home: 'A',
           away: 'B',
           stage: 'group X',
-          prediction: 'away'
+          prediction: 'away',
+          score: {
+            home: 6,
+            away: 6
+          },
         },
         {
           id: 4,
@@ -103,6 +107,13 @@ describe('profilePage', () => {
             home: 3,
             away: 2
           },
+        },
+        {
+          id: 5,
+          home: 'E',
+          away: 'F',
+          stage: 'group Y',
+          prediction: 'draw'
         }
       ];
 
@@ -155,10 +166,22 @@ describe('profilePage', () => {
     });
 
     it('should show guessed or missed status of prediction', () => {
-      expect(profilePage.find('[data-id="prediction-result"]').at(0).props().className).to.contain('fa-check-circle');
-      expect(profilePage.find('[data-id="prediction-result"]').at(1).props().className).to.contain('fa-times-circle');
-      expect(profilePage.find('[data-id="prediction-result"]').at(2).props().className).to.be(undefined);
-      expect(profilePage.find('[data-id="prediction-result"]').at(3).props().className).to.be(undefined);
+      const guessed = 'guessed-prediction';
+      const missed = 'missed-prediction';
+      const noResult = undefined;
+      expect(profilePage.find('[data-id="prediction-result"]').at(0).props().className).to.contain(guessed);
+      expect(profilePage.find('[data-id="prediction-result"]').at(1).props().className).to.contain(missed);
+      expect(profilePage.find('[data-id="prediction-result"]').at(2).props().className).to.contain(missed);
+      expect(profilePage.find('[data-id="prediction-result"]').at(3).props().className).to.be(noResult);
+      expect(profilePage.find('[data-id="prediction-result"]').at(4).props().className).to.be(noResult);
     });
+
+
+    it('should show total of guessed and missed predictions', () => {
+      expect(profilePage.find('[data-id="num-guessed"]').text()).to.eql(1);
+      expect(profilePage.find('[data-id="num-missed"]').text()).to.eql(2);
+    });
+
+    it('should not allow updating predictions of matches in the past');
   });
 });

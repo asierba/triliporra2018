@@ -1,1 +1,17 @@
 .hidden { display:none; }
+
+.guessed-prediction {
+  color: green;
+}
+
+.guessed-prediction:before {
+  content: "\f058";
+}
+
+.missed-prediction {
+  color: red;
+}
+
+.missed-prediction:before {
+  content: "\f057";
+}
