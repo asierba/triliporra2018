@@ -1,6 +1,11 @@
 import React from 'react';
 import { Link, NavLink } from "react-router-dom";
 import Login from './login/login';
+import Auth from "../Auth";
+
+function userIsAuthenticated() {
+  return new Auth().isAuthenticated();
+}
 
 export default function Header(props) {
   return (
@@ -21,9 +26,11 @@ export default function Header(props) {
           <li className="nav-item">
             <NavLink activeClassName="active" className="nav-link" to="/matches">Matches</NavLink>
           </li>
+          <li className={ "nav-item " + (userIsAuthenticated() ? '' : 'hidden') }>
+            <NavLink activeClassName="active" className="nav-link" to="/profile">Profile</NavLink>
+          </li>
         </ul>
       </div>
-
       <Login></Login>
     </nav>
   );

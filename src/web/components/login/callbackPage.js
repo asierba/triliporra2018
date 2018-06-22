@@ -10,14 +10,14 @@ class CallbackPage extends React.Component {
 
   componentWillMount() {
     this.auth.handleAuthentication().then(() => {
-      this.props.history.replace('/');
+      this.props.history.replace('/profile');
     });
   }
 
   render() {
     return (
       <div>Logging in progress ..</div>
-    )
+    );
   }
 }
 
