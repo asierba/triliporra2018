@@ -41,8 +41,8 @@ function getScoreResult(score) {
 
 function showPredictionResult(match) {
   const noResult = <span data-id="prediction-result"></span>;
-  const guessedResult = <i className="fas fa-check-circle" data-id="prediction-result"></i>;
-  const missedResult = <i className="fas fa-times-circle" data-id="prediction-result"></i>;
+  const guessedResult = <i className="fas guessed-prediction" data-id="prediction-result"></i>;
+  const missedResult = <i className="fas missed-prediction" data-id="prediction-result"></i>;
 
   if (!match.score || !match.prediction) {
     return noResult;
@@ -107,8 +107,7 @@ export default class MatchRow extends React.Component {
             <option value="home">{match.home}</option>
             <option value="draw">draw</option>
             <option value="away">{match.away}</option>
-          </select>
-          {showPredictionResult(match)}
+          </select> {showPredictionResult(match)}
         </div>
       </div>
     );
