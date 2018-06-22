@@ -22,6 +22,13 @@ function isToday(dateAsString) {
   return date.setHours(0,0,0,0) == now.setHours(0,0,0,0);
 }
 
+function isInThePast(dateAsString) {
+  const date = new Date(dateAsString);
+  const now = new Date();
+
+  return date < now;
+}
+
 function getScoreResult(score) {
   if(score.home > score.away) {
     return "home";
@@ -95,7 +102,7 @@ export default class MatchRow extends React.Component {
         </div>
         <div className={"col " + (enablePrediction ? '' : 'hidden')}>
           <select data-id="prediction" onChange={this.onChange.bind(this, match.id, userId)}
-            value={match.prediction}>
+            value={match.prediction} disabled={isInThePast(match.date)}>
             <option> -- choose result --</option>
             <option value="home">{match.home}</option>
             <option value="draw">draw</option>
