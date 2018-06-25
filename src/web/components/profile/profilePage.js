@@ -4,21 +4,38 @@ import { Redirect } from 'react-router';
 import MatchRow from '../match/matchRow';
 import axios from "axios/index";
 
-function getScoreResult(score) {
-  if(score === undefined)
-    return "---";
+function scrollToToday() {
+  function findPosition(element) {
+    var curtop = 0;
+    if (element.offsetParent) {
+      do {
+        curtop += element.offsetTop;
+      } while (element = element.offsetParent);
+      return [curtop];
+    }
+  }
 
-  if(score.home > score.away) {
+  const todayMatch = document.getElementsByClassName("match-today")[0];
+  if (todayMatch) {
+    window.scroll(0,findPosition(todayMatch));
+  }
+}
+
+function getScoreResult(score) {
+  if (score.home > score.away) {
     return "home";
   }
-  if(score.home < score.away) {
+  if (score.home < score.away) {
     return "away";
   }
   return "draw";
 }
 
-function getGuessed(matches) {
+function countGuessedMatches(matches) {
   return matches.reduce((acc, match) => {
+    if (match.score === undefined || match.prediction === undefined)
+      return acc;
+
     if (getScoreResult(match.score) === match.prediction)
       return acc + 1;
 
@@ -26,11 +43,12 @@ function getGuessed(matches) {
   }, 0);
 }
 
-function getMissed(matches) {
+function countMissedMatches(matches) {
   return matches.reduce((acc, match) => {
-    if (getScoreResult(match.score) !== match.prediction
-      && match.prediction !== undefined
-      && getScoreResult(match.score) !== "---")
+    if (match.score === undefined || match.prediction === undefined)
+      return acc;
+
+    if (getScoreResult(match.score) !== match.prediction)
       return acc + 1;
 
     return acc;
@@ -72,20 +90,16 @@ export default class MatchesPage extends React.Component {
     return (
       <div>
         <div className="container-fluid">
+          <button type="button" className="float-right btn btn-secondary today-button" onClick={scrollToToday}>go to today</button>
           <h2>Predictions</h2>
-
           <div>
-            <span data-id="num-guessed">{getGuessed(this.state.matches)}</span> <i className="fas guessed-prediction"></i> <span data-id="num-missed">{getMissed(this.state.matches)}</span> <i className="fas missed-prediction"></i>
+            <span data-id="num-guessed">{countGuessedMatches(this.state.matches)}</span> <i className="fas guessed-prediction"></i> <span data-id="num-missed">{countMissedMatches(this.state.matches)}</span> <i className="fas missed-prediction"></i>
           </div>
 
           {this.state.matches.map(x =>
             <MatchRow key={x.id} match={x} enablePrediction={true} userId={this.state.userId}/>
           )}
-
-
         </div>
-
-
       </div>
     );
   }

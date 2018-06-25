@@ -15,3 +15,7 @@
 .missed-prediction:before {
   content: "\f057";
 }
+
+.today-button {
+  margin-top: 10px;
+}
