@@ -1,6 +1,7 @@
 import React from 'react';
 import TeamFlag from './teamFlag';
 import axios from 'axios';
+import * as Day from '../../day';
 
 function showScore(score) {
   if (score) {
@@ -13,20 +14,6 @@ function showDate(dateAsString) {
   const date = new Date(dateAsString);
   var options = {month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric'};
   return date.toLocaleString('en-US', options);
-}
-
-function isToday(dateAsString) {
-  const date = new Date(dateAsString);
-  const now = new Date();
-
-  return date.setHours(0,0,0,0) == now.setHours(0,0,0,0);
-}
-
-function isInThePast(dateAsString) {
-  const date = new Date(dateAsString);
-  const now = new Date();
-
-  return date < now;
 }
 
 function getScoreResult(score) {
@@ -84,7 +71,7 @@ export default class MatchRow extends React.Component {
 
     return (
       <div className={"row align-items-center rounded match-row " +
-      (isToday(match.date) ? "match-today" : "")}>
+      (Day.isToday(match.date) ? "match-today" : "")}>
         <div className="col">
           <span className="float-right"><span data-id="home">{match.home}</span> <TeamFlag name={match.home}/></span>
         </div>
@@ -102,7 +89,7 @@ export default class MatchRow extends React.Component {
         </div>
         <div className={"col " + (enablePrediction ? '' : 'hidden')}>
           <select data-id="prediction" onChange={this.onChange.bind(this, match.id, userId)}
-            value={match.prediction} disabled={isInThePast(match.date)}>
+            value={match.prediction} disabled={Day.isInThePast(match.date)}>
             <option> -- choose result --</option>
             <option value="home">{match.home}</option>
             <option value="draw">draw</option>
