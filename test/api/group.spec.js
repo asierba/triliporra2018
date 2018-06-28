@@ -76,7 +76,7 @@ describe('group', () => {
         expect(teamNames).to.eql(['Team 1', 'Team 2']));
   });
 
-  it('should return number of match played for each team', () => {
+  it('should return number of match played for each team with a score', () => {
     stubRepository.setMatches([{
       home: "Team 1",
       away: "Team 2",
@@ -85,7 +85,8 @@ describe('group', () => {
       {
         home: "Team 1",
         away: "Team 3",
-        stage: "Group A"
+        stage: "Group A",
+        score: { home: 1, away: 2 }
       }
     ]);
 
@@ -97,7 +98,7 @@ describe('group', () => {
         const teamNames = teams.map(team => team.name);
         expect(teamNames).to.eql(['Team 1', 'Team 2', 'Team 3']);
         const matchesPlayed = teams.map(team => team.matchesPlayed);
-        expect(matchesPlayed).to.eql([2, 1, 1]);
+        expect(matchesPlayed).to.eql([1, 0, 1]);
       });
   });
 
