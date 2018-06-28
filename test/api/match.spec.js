@@ -4,7 +4,7 @@ import mockery from 'mockery';
 import * as stubRepository from './helpers/stubRepository';
 import createTestServer from './helpers/createTestServer';
 
-describe('api', () => {
+describe('match', () => {
   let server;
 
   beforeEach(() => {
@@ -21,33 +21,7 @@ describe('api', () => {
     mockery.disable();
   });
 
-  describe('root', () => {
-    it('should return 200', () =>
-      request(server)
-        .get('/api')
-        .expect(200));
-
-    it('should show the app version', () =>
-      request(server)
-        .get('/api')
-        .then(response => {
-          const body = response.body;
-          expect(body).to.have.key('version');
-        }));
-
-    it('should have link to matches and users', () =>
-      request(server)
-        .get('/api')
-        .then(response => {
-          const body = response.body;
-          expect(body.links).to.eql([
-            {'rel': ["matches"], "href": "/api/match"},
-            {'rel': ["users"], "href": "/api/user"}
-          ]);
-        }));
-  });
-
-  describe('match get', () => {
+  describe('get', () => {
     const allMatches = [{
       id: 1,
       date: "2018-06-14T15:00:00Z",
@@ -77,7 +51,7 @@ describe('api', () => {
   });
 
 
-  describe('match patch', () => {
+  describe('patch', () => {
     it('should add the score to a match', () => {
       const matches = [{
         id: 1,

@@ -6,6 +6,7 @@ function getRootMiddleware(req, res) {
     links: [
       {rel: ['matches'], href: '/api/match'},
       {rel: ['users'], href: '/api/user'},
+      {rel: ['groups'], href: '/api/group'},
     ]
   };
   res.send(response)

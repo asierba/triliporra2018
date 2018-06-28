@@ -1,19 +1,19 @@
 const repository = require('../repository');
 
-const isAHomeWin = match => teamName => match.home === teamName && match.score.home > match.score.away;
-const isAAwayWin = match => teamName => match.away === teamName && match.score.home < match.score.away;
-const isAAwayLose = match => teamName => match.away === teamName && match.score.home > match.score.away;
-const isAHomeLose = match => teamName => match.home === teamName && match.score.home < match.score.away;
+const isHomeWin = match => teamName => match.home === teamName && match.score.home > match.score.away;
+const isAwayWin = match => teamName => match.away === teamName && match.score.home < match.score.away;
+const isAwayLose = match => teamName => match.away === teamName && match.score.home > match.score.away;
+const isHomeLose = match => teamName => match.home === teamName && match.score.home < match.score.away;
+const isHomeDraw = match => teamName => match.home === teamName && match.score.home === match.score.away
+const isAwayDraw = match => teamName => match.away === teamName && match.score.home === match.score.away
 
-const isAWinForTeam = teamName => match => isAHomeWin(match)(teamName) || isAAwayWin(match)(teamName);
-const isALoseForTeam = teamName => match => isAHomeLose(match)(teamName) || isAAwayLose(match)(teamName);
-const isADrawFroTeam = teamName => match =>
-  match.home === teamName && match.score.home === match.score.away
-  || match.away === teamName && match.score.home === match.score.away;
+const isWinForTeam = teamName => match => isHomeWin(match)(teamName) || isAwayWin(match)(teamName);
+const isLoseForTeam = teamName => match => isHomeLose(match)(teamName) || isAwayLose(match)(teamName);
+const isADrawFroTeam = teamName => match => isHomeDraw(match)(teamName) || isAwayDraw(match)(teamName);
 
 const convertToTeamDetails = matches => teamName => {
-  const isAWin = isAWinForTeam(teamName);
-  const isALose = isALoseForTeam(teamName);
+  const isAWin = isWinForTeam(teamName);
+  const isALose = isLoseForTeam(teamName);
   const isADraw = isADrawFroTeam(teamName);
 
   const teamMatches = matches.filter(match => match.home === teamName || match.away === teamName);
