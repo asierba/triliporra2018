@@ -14,7 +14,7 @@ const getMatchesMiddleware = require('./middleware/get-matches-middleware');
 const patchMatchMiddleware = require('./middleware/patch-match-middleware');
 const userMiddleware = require('./middleware/get-user-middleware');
 const patchUserMatchMiddleware = require('./middleware/patch-user-match-middleware');
-
+const getGroupsMiddleware = require('./middleware/get-groups-middleware');
 
 app.get('/api', getRootMiddleware);
 
@@ -23,6 +23,8 @@ app.patch('/api/match/:id', patchMatchMiddleware);
 
 app.get('/api/user/:id', userMiddleware);
 app.patch('/api/user/:id/match/:matchId', patchUserMatchMiddleware);
+
+app.get('/api/group', getGroupsMiddleware);
 
 app.get('/*', (req, res) => res.sendFile(path.join(__dirname, '../../dist/index.html')));
 
