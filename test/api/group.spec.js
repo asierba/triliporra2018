@@ -96,9 +96,9 @@ describe('group', () => {
       .then(body => body.entities.find(x => x.name === 'A').teams)
       .then(teams => {
         const teamNames = teams.map(team => team.name);
-        expect(teamNames).to.eql(['Team 1', 'Team 2', 'Team 3']);
+        expect(teamNames).to.eql(['Team 3', 'Team 1', 'Team 2']);
         const matchesPlayed = teams.map(team => team.matchesPlayed);
-        expect(matchesPlayed).to.eql([1, 0, 1]);
+        expect(matchesPlayed).to.eql([1, 1, 0]);
       });
   });
 
@@ -186,5 +186,25 @@ describe('group', () => {
   });
 
   it('should return GF and GA');
-  it('should return teams in right order');
+
+  it('should return teams ordered by points descendant', () => {
+    stubRepository.setMatches([{
+      home: "Team 1",
+      away: "Team 2",
+      stage: "Group A",
+      score : { home: 0, away: 5 }
+    }
+    ]);
+
+    return request(server)
+      .get('/api/group')
+      .then(response => response.body)
+      .then(body => body.entities.find(x => x.name === 'A').teams)
+      .then(teams => {
+        const teamNames = teams.map(team => team.name);
+        expect(teamNames).to.eql(['Team 2', 'Team 1']);
+        const teamPoints = teams.map(team => team.points);
+        expect(teamPoints).to.eql([3, 0]);
+      });
+  });
 });
