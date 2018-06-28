@@ -27,13 +27,16 @@ const convertToTeamDetails = matches => teamName => {
   return {name: teamName, matchesPlayed: matchesPlayed, wins, loses, draws, points};
 }
 
+const byPointsDesc = (match, otherMatch) => otherMatch.points - match.points;
+
 const getTeamsInGroupFromMatches = matches => groupName => {
   const groupMatches = matches.filter(match => match.stage === groupName);
   const toTeamDetails = convertToTeamDetails(groupMatches);
 
   const teamNames = groupMatches.map(x => x.home).concat(groupMatches.map(x => x.away));
   const uniqueTeamNames = [...new Set(teamNames)];
-  return uniqueTeamNames.map(toTeamDetails);
+
+  return uniqueTeamNames.map(toTeamDetails).sort(byPointsDesc);
 }
 
 function getGroups() {
