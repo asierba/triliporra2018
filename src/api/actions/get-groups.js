@@ -22,7 +22,7 @@ const convertToTeamDetails = matches => teamName => {
   const wins = matchesWithScore.filter(isAWin).length;
   const loses = matchesWithScore.filter(isALose).length;
   const draws = matchesWithScore.filter(isADraw).length;
-  const matchesPlayed = teamMatches.length;
+  const matchesPlayed = matchesWithScore.length;
   const points = wins * 3 + draws;
   return {name: teamName, matchesPlayed: matchesPlayed, wins, loses, draws, points};
 }
