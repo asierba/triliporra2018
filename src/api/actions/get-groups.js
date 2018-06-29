@@ -24,10 +24,28 @@ const convertToTeamDetails = matches => teamName => {
   const draws = matchesWithScore.filter(isADraw).length;
   const matchesPlayed = matchesWithScore.length;
   const points = wins * 3 + draws;
-  return {name: teamName, matchesPlayed: matchesPlayed, wins, loses, draws, points};
+  const goalsScored = matchesWithScore
+    .reduce((result, match) => {
+      if(match.home === teamName)
+        return result + match.score.home;
+      if(match.away === teamName)
+        return result + match.score.away;
+    } ,0);
+
+  const goalsAgainst = matchesWithScore
+    .reduce((result, match) => {
+      if(match.home === teamName)
+        return result + match.score.away;
+      if(match.away === teamName)
+        return result + match.score.home;
+    } ,0);
+  const goalDifference = goalsScored - goalsAgainst;
+  return {name: teamName, matchesPlayed, wins, loses, draws, points, goalsScored, goalsAgainst, goalDifference};
 }
 
 const byPointsDesc = (match, otherMatch) => otherMatch.points - match.points;
+const byGoalDifference = (match, otherMatch) => otherMatch.goalDifference - match.goalDifference;
+const byGoalsScored = (match, otherMatch) => otherMatch.goalsScored - match.goalsScored;
 
 const getTeamsInGroupFromMatches = matches => groupName => {
   const groupMatches = matches.filter(match => match.stage === groupName);
@@ -36,7 +54,11 @@ const getTeamsInGroupFromMatches = matches => groupName => {
   const teamNames = groupMatches.map(x => x.home).concat(groupMatches.map(x => x.away));
   const uniqueTeamNames = [...new Set(teamNames)];
 
-  return uniqueTeamNames.map(toTeamDetails).sort(byPointsDesc);
+  return uniqueTeamNames
+    .map(toTeamDetails)
+    .sort(byPointsDesc)
+    .sort(byGoalDifference)
+    .sort(byGoalsScored);
 }
 
 function getGroups() {
