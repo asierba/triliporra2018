@@ -77,9 +77,9 @@ const getTeamsInGroupFromMatches = matches => groupName => {
 
   return uniqueTeamNames
     .map(toTeamDetails)
-    .sort(byPointsDesc)
+    .sort(byGoalsScored)
     .sort(byGoalDifference)
-    .sort(byGoalsScored);
+    .sort(byPointsDesc);
 }
 
 function getGroups() {
