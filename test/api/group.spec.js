@@ -185,7 +185,29 @@ describe('group', () => {
       });
   });
 
-  it('should return GF and GA');
+  it('should return goals scored, against and difference', () => {
+    stubRepository.setMatches([{
+      home: "Team 1",
+      away: "Team 2",
+      stage: "Group A",
+      score : { home: 3, away: 5 }
+    }]);
+
+    return request(server)
+      .get('/api/group')
+      .then(response => response.body)
+      .then(body => body.entities.find(x => x.name === 'A').teams)
+      .then(teams => {
+        const teamNames = teams.map(team => team.name);
+        expect(teamNames).to.eql(['Team 2', 'Team 1']);
+        const teamGoalsScored = teams.map(team => team.goalsScored);
+        expect(teamGoalsScored).to.eql([5, 3]);
+        const teamGoalsAgainst = teams.map(team => team.goalsAgainst);
+        expect(teamGoalsAgainst).to.eql([3, 5]);
+        const teamGoalDifference = teams.map(team => team.goalDifference);
+        expect(teamGoalDifference).to.eql([2, -2]);
+      });
+  });
 
   it('should return teams ordered by points descendant', () => {
     stubRepository.setMatches([{
@@ -193,8 +215,7 @@ describe('group', () => {
       away: "Team 2",
       stage: "Group A",
       score : { home: 0, away: 5 }
-    }
-    ]);
+    }]);
 
     return request(server)
       .get('/api/group')
@@ -205,6 +226,84 @@ describe('group', () => {
         expect(teamNames).to.eql(['Team 2', 'Team 1']);
         const teamPoints = teams.map(team => team.points);
         expect(teamPoints).to.eql([3, 0]);
+      });
+  });
+
+  it('should return teams ordered by points and goal difference', () => {
+    stubRepository.setMatches([{
+      home: "Team 1",
+      away: "Team 2",
+      stage: "Group A",
+      score : { home: 2, away: 1 }
+    },
+    {
+      home: "Team 2",
+      away: "Team 1",
+      stage: "Group A",
+      score : { home: 2, away: 0 }
+    }]);
+
+    return request(server)
+      .get('/api/group')
+      .then(response => response.body)
+      .then(body => body.entities.find(x => x.name === 'A').teams)
+      .then(teams => {
+        const teamNames = teams.map(team => team.name);
+        expect(teamNames).to.eql(['Team 2', 'Team 1']);
+        const teamPoints = teams.map(team => team.points);
+        expect(teamPoints).to.eql([3, 3]);
+        const teamGoalDifference = teams.map(team => team.goalDifference);
+        expect(teamGoalDifference).to.eql([1, -1]);
+      });
+  });
+
+  it('should return teams ordered by points, goal difference and goals scored', () => {
+    stubRepository.setMatches([
+    {
+      home: "Team 2",
+      away: "Team 1",
+      stage: "Group A",
+      score : { home: 1, away: 0 }
+    },
+    {
+      home: "Team 3",
+      away: "Team 1",
+      stage: "Group A",
+      score : { home: 2, away: 1 }
+    },
+    {
+      home: "Team 3",
+      away: "Team 2",
+      stage: "Group A",
+      score : { home: 0, away: 0 }
+    }]);
+
+    /*
+      Team 3 vs Team 1 2-1
+      Team 2 vs Team 1 1-0
+      Team 3 vs Team 2 0-0
+
+	            W D L Points 	GD GS
+      Team 3  1 1 0 4 	    1  2
+      Team 2  1 1 0 4		    1  1
+      Team 1	0 0 2 0		    -2 1
+
+
+     */
+
+    return request(server)
+      .get('/api/group')
+      .then(response => response.body)
+      .then(body => body.entities.find(x => x.name === 'A').teams)
+      .then(teams => {
+        const teamNames = teams.map(team => team.name);
+        expect(teamNames).to.eql(['Team 3', 'Team 2', 'Team 1']);
+        const teamPoints = teams.map(team => team.points);
+        expect(teamPoints).to.eql([4, 4, 0]);
+        const teamGoalDifference = teams.map(team => team.goalDifference);
+        expect(teamGoalDifference).to.eql([1, 1, -2]);
+        const teamGoalsScored = teams.map(team => team.goalsScored);
+        expect(teamGoalsScored).to.eql([2, 1, 1]);
       });
   });
 });
