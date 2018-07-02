@@ -81,12 +81,36 @@ describe('match', () => {
             ])));
     });
 
+    it('should convert to int score when adding it to a match', () => {
+      const matches = [{
+        id: 1,
+        home: "Catalunya",
+        away: "Euskal Herria",
+      }];
+      stubRepository.setMatches(matches);
+
+      const score = { home: "3", away: "6"};
+
+      return request(server)
+        .patch('/api/match/1')
+        .send({ score: score})
+        .expect(204)
+        .then(() =>
+          stubRepository.getAll('match').then(matches => {
+            expect(matches[0].score.home).to.be(3);
+            expect(matches[0].score.away).to.be(6);
+          }));
+    });
+
     it('should error when match not found', () =>
       request(server)
         .patch('/api/match/-1')
+        .send({ score: { home: "3", away: "6"}})
         .expect(404)
         .then(response => expect(response.body).to.eql({message: "match with id '-1' not found"}))
     );
+
+    it('should error when score not defined');
   });
 });
 
