@@ -15,6 +15,9 @@ export default function Group(props) {
         <th scope="col">W</th>
         <th scope="col">L</th>
         <th scope="col">D</th>
+        <th scope="col">GS</th>
+        <th scope="col">GA</th>
+        <th scope="col">GD</th>
         <th scope="col">Pts</th>
       </tr>
       </thead>
@@ -26,6 +29,9 @@ export default function Group(props) {
           <td>{team.wins}</td>
           <td>{team.loses}</td>
           <td>{team.draws}</td>
+          <td>{team.goalsScored}</td>
+          <td>{team.goalsAgainst}</td>
+          <td>{team.goalDifference}</td>
           <td>{team.points}</td>
         </tr>
       )}
