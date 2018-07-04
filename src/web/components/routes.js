@@ -16,6 +16,7 @@ export default function Routes(props) {
       <Route path="/admin" component={InsertMatchesPage} />
       <Route path="/profile" component={ProfilePage} />
       <Route path="/groups" component={GroupsPage} />
+      <Route path="/user-:id" component={ProfilePage} />
       <Route path="/callback" component={CallbackPage} />
     </div>);
 }

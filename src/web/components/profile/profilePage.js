@@ -55,7 +55,7 @@ function countMissedMatches(matches) {
   }, 0);
 }
 
-export default class MatchesPage extends React.Component {
+export default class ProfilePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
