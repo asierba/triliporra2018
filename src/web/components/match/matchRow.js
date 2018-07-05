@@ -47,7 +47,7 @@ export default class MatchRow extends React.Component {
 
     this.state = {
       match : props.match,
-      enablePrediction : props.enablePrediction,
+      displayPrediction : props.displayPrediction,
       userId: props.userId
     };
   }
@@ -64,10 +64,23 @@ export default class MatchRow extends React.Component {
     axios.patch(`/api/user/${userId}/match/${matchId}`, { prediction})
   }
 
+  displayPredictionFor(match) {
+    if (!this.state.displayPrediction)
+      return;
+
+    return <div className="col">
+      <select data-id="prediction" onChange={this.onChange.bind(this, match.id, this.state.userId)}
+              value={match.prediction} disabled={Day.isInThePast(match.date)}>
+        <option> -- choose result --</option>
+        <option value="home">{match.home}</option>
+        <option value="draw">draw</option>
+        <option value="away">{match.away}</option>
+      </select> {showPredictionResult(match)}
+    </div>;
+  }
+
   render() {
     const match = this.state.match;
-    const enablePrediction = this.state.enablePrediction;
-    const userId = this.state.userId;
 
     return (
       <div className={"row align-items-center rounded match-row " +
@@ -87,15 +100,7 @@ export default class MatchRow extends React.Component {
         <div className="col">
           <span className="float-right stage" data-id="stage">{match.stage}</span>
         </div>
-        <div className={"col " + (enablePrediction ? '' : 'hidden')}>
-          <select data-id="prediction" onChange={this.onChange.bind(this, match.id, userId)}
-            value={match.prediction} disabled={Day.isInThePast(match.date)}>
-            <option> -- choose result --</option>
-            <option value="home">{match.home}</option>
-            <option value="draw">draw</option>
-            <option value="away">{match.away}</option>
-          </select> {showPredictionResult(match)}
-        </div>
+        { this.displayPredictionFor(match)}
       </div>
     );
   }

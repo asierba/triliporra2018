@@ -6,6 +6,8 @@ import {mount} from 'enzyme';
 import moxios from 'moxios'
 
 describe("MatchesPage", () => {
+  let matchesPage;
+
   beforeEach(() => {
     moxios.install();
   });
@@ -14,8 +16,7 @@ describe("MatchesPage", () => {
     moxios.uninstall();
   });
 
-
-  it('should display list of all matches', (done) => {
+  beforeEach((done) => {
     const matches = [
       {
         id: 1,
@@ -34,22 +35,28 @@ describe("MatchesPage", () => {
       responseText: JSON.stringify({entities: matches})
     })
 
-    const matchesPage = mount(<MatchesPage />);
+    matchesPage = mount(<MatchesPage />);
 
     setImmediate(() => {
       matchesPage.update();
-
-      expect(matchesPage.find('[data-id="home"]').length).to.be(2);
-
-      expect(matchesPage.find('[data-id="home"]').at(0).text()).to.be('Brazil');
-      expect(matchesPage.find('[data-id="away"]').at(0).text()).to.be('Russia');
-      expect(matchesPage.find('[data-id="stage"]').at(0).text()).to.be('group A');
-
-      expect(matchesPage.find('[data-id="home"]').at(1).text()).to.be('France');
-      expect(matchesPage.find('[data-id="away"]').at(1).text()).to.be('Italy');
-      expect(matchesPage.find('[data-id="stage"]').at(1).text()).to.be('group B');
-
       done();
     });
+  });
+
+
+  it('should display list of all matches', () => {
+    expect(matchesPage.find('[data-id="home"]').length).to.be(2);
+
+    expect(matchesPage.find('[data-id="home"]').at(0).text()).to.be('Brazil');
+    expect(matchesPage.find('[data-id="away"]').at(0).text()).to.be('Russia');
+    expect(matchesPage.find('[data-id="stage"]').at(0).text()).to.be('group A');
+
+    expect(matchesPage.find('[data-id="home"]').at(1).text()).to.be('France');
+    expect(matchesPage.find('[data-id="away"]').at(1).text()).to.be('Italy');
+    expect(matchesPage.find('[data-id="stage"]').at(1).text()).to.be('group B');
+  });
+
+  it('should NOT display predictions', () => {
+    expect(matchesPage.find('[data-id="prediction"]').exists()).to.be(false);
   });
 });
