@@ -99,4 +99,22 @@ describe('userPage', () => {
     expect(userPage.find('[data-id="stage"]').at(1).text()).to.be('group B');
   });
 
+  it('should display predictions', () => {
+    expect(userPage.find('[data-id="prediction"]').at(0).props().value).to.be('home');
+    expect(userPage.find('[data-id="prediction"]').at(1).props().value).to.be('away');
+  });
+
+  it('should NOT let update predictions', (done) => {
+    const userId = 123;
+
+
+    const {elementIndex, id, prediction } = {elementIndex: 1, id: 2, prediction: 'home' };
+    userPage.find('[data-id="prediction"]').at(elementIndex).simulate('change', { target: { value: prediction } });
+
+    setImmediate(() => {
+      const request = moxios.requests.mostRecent();
+      expect(request.url).to.not.eql(`/api/user/${userId}/match/${id}`);
+      done();
+    });
+  });
 });

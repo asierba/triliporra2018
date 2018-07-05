@@ -97,7 +97,11 @@ export default class ProfilePage extends React.Component {
           </div>
 
           {this.state.matches.map(x =>
-            <MatchRow key={x.id} match={x} displayPrediction={true} userId={this.state.userId}/>
+            <MatchRow key={x.id}
+                      match={x}
+                      editingIsEnabled={true}
+                      displayPrediction={true}
+                      userId={this.state.userId}/>
           )}
         </div>
       </div>

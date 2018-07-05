@@ -48,29 +48,39 @@ export default class MatchRow extends React.Component {
     this.state = {
       match : props.match,
       displayPrediction : props.displayPrediction,
-      userId: props.userId
+      userId: props.userId,
+      editingIsEnabled : props.editingIsEnabled
     };
   }
 
-  onChange(matchId, userId, event) {
-    const value = event.target.value;
+  changesAreAllowed() {
+    return this.state.editingIsEnabled && !Day.isInThePast(this.state.match.date);
+  }
 
+  onChange(event) {
     const match = this.state.match;
+
+    if (!this.changesAreAllowed()) return;
+
+    const value = event.target.value;
     match.prediction = value;
 
     this.setState( { match :match });
 
     const prediction = value;
-    axios.patch(`/api/user/${userId}/match/${matchId}`, { prediction})
+    const userId = this.state.userId;
+    axios.patch(`/api/user/${userId}/match/${match.id}`, { prediction})
   }
 
-  displayPredictionFor(match) {
+  displayPrediction() {
+    const match = this.state.match;
+
     if (!this.state.displayPrediction)
       return;
 
     return <div className="col">
-      <select data-id="prediction" onChange={this.onChange.bind(this, match.id, this.state.userId)}
-              value={match.prediction} disabled={Day.isInThePast(match.date)}>
+      <select data-id="prediction" onChange={this.onChange.bind(this)}
+              value={match.prediction} disabled={!this.changesAreAllowed()}>
         <option> -- choose result --</option>
         <option value="home">{match.home}</option>
         <option value="draw">draw</option>
@@ -100,7 +110,7 @@ export default class MatchRow extends React.Component {
         <div className="col">
           <span className="float-right stage" data-id="stage">{match.stage}</span>
         </div>
-        { this.displayPredictionFor(match)}
+        { this.displayPrediction()}
       </div>
     );
   }
