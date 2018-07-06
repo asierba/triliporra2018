@@ -3,7 +3,7 @@ import expect from 'expect.js';
 import {mount} from 'enzyme';
 import moxios from 'moxios'
 import proxyquire from 'proxyquire';
-const profilePagePath = "../../../../src/web/components/profile/profilePage";
+const profilePagePath = "../../../../src/web/components/user/profilePage";
 
 proxyquire.noCallThru();
 
