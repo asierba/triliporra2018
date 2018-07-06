@@ -3,7 +3,7 @@ import { Route } from "react-router-dom";
 import HomePage from './home/homePage';
 import MatchesPage from './match/matchesPage';
 import InsertMatchesPage from './admin/insertMatchesPage';
-import ProfilePage from './profile/profilePage';
+import ProfilePage from './user/profilePage';
 import UserPage from './user/userPage';
 import GroupsPage from './group/groupsPage';
 import CallbackPage from './login/callbackPage';
