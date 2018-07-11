@@ -29,6 +29,9 @@ export default function Header(props) {
           <li className="nav-item">
             <NavLink activeClassName="active" className="nav-link" to="/groups">Groups</NavLink>
           </li>
+          <li className="nav-item">
+            <NavLink activeClassName="active" className="nav-link" to="/users">Users</NavLink>
+          </li>
           <li className={ "nav-item " + (userIsAuthenticated() ? '' : 'hidden') }>
             <NavLink activeClassName="active" className="nav-link" to="/profile">Profile</NavLink>
           </li>
