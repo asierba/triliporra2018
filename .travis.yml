@@ -3,10 +3,7 @@ node_js:
   - "10"
 script:
   - npm test
-  - npm run deploy
-services:
-  - docker
-
+  
 # use npm ci instead of npm install to faster builds (https://docs.npmjs.com/cli/ci)
 install:
   - npm i -g npm@5.7.1 # this should be deleted once 5.7.X is out of "pre-release"
