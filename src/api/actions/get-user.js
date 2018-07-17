@@ -29,23 +29,17 @@ function addResult(match) {
   return Object.assign({}, match, { result });
 }
 
-function getUser(id) {
-  return new Promise(resolve => {
-    Promise.all([
-      repository.getAll('match-prediction'),
-      repository.getAll('match')
-    ]).then(results => {
-      const [matchPredictions, allMatches] = results;
-      const matches = allMatches
-        .map(match => addPrediction(match, matchPredictions, id))
-        .map(match => addResult(match));
-
-      resolve({
-        id,
-        matches
-      });
-    });
-  });
+async function getUser(id) {
+  const matchPredictions = await repository.getAll('match-prediction');
+  const allMatches = await repository.getAll('match');
+  const matches = allMatches
+    .map(match => addPrediction(match, matchPredictions, id))
+    .map(match => addResult(match));
+  const user = {
+    id,
+    matches
+  };
+  return user;
 }
 
 module.exports = getUser;

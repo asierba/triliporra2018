@@ -82,21 +82,18 @@ const getTeamsInGroupFromMatches = matches => groupName => {
     .sort(byPointsDesc);
 }
 
-function getGroups() {
-  return new Promise(resolve => {
-    repository.getAll('match').then(matches => {
-      const getTeamsInGroup = getTeamsInGroupFromMatches(matches);
-      resolve([
-        {name: 'A', teams: getTeamsInGroup('Group A')},
-        {name: 'B', teams: getTeamsInGroup('Group B')},
-        {name: 'C', teams: getTeamsInGroup('Group C')},
-        {name: 'D', teams: getTeamsInGroup('Group D')},
-        {name: 'E', teams: getTeamsInGroup('Group E')},
-        {name: 'F', teams: getTeamsInGroup('Group F')},
-        {name: 'G', teams: getTeamsInGroup('Group G')},
-        {name: 'H', teams: getTeamsInGroup('Group H')}]);
-    });
-  });
+async function getGroups() {
+  const matches = await repository.getAll('match');
+  const getTeamsInGroup = getTeamsInGroupFromMatches(matches);
+  return [
+    {name: 'A', teams: getTeamsInGroup('Group A')},
+    {name: 'B', teams: getTeamsInGroup('Group B')},
+    {name: 'C', teams: getTeamsInGroup('Group C')},
+    {name: 'D', teams: getTeamsInGroup('Group D')},
+    {name: 'E', teams: getTeamsInGroup('Group E')},
+    {name: 'F', teams: getTeamsInGroup('Group F')},
+    {name: 'G', teams: getTeamsInGroup('Group G')},
+    {name: 'H', teams: getTeamsInGroup('Group H')}];
 }
 
 module.exports = getGroups;

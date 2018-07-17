@@ -1,7 +1,7 @@
 const getMatches = require('../actions/get-matches');
 
-function getMatchesMiddleware(req, res) {
-  getMatches().then(matches => res.send({entities: matches}));
+async function getMatchesMiddleware(req, res) {
+  res.send({entities: await getMatches()});
 }
 
 module.exports = getMatchesMiddleware;
