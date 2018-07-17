@@ -90,6 +90,7 @@ describe('user', () => {
           { matchId: 2, prediction: 'away', userId: 2},
           { matchId: 1, prediction: 'home', userId: 5},
           { matchId: 2, prediction: 'draw', userId: 5},
+          { matchId: 3, prediction: 'draw', userId: 5},
         ];
         stubRepository.setPredictions(matchPredictions);
       });
@@ -116,6 +117,47 @@ describe('user', () => {
                 prediction: 'draw'
               }]);
           }));
+
+      it('should have prediction results (guessed, missed) for matches with scores', () => {
+        stubRepository.setMatches([{
+          id: 1,
+          date: "2018-06-14T15:00:00Z",
+          home: "Catalunya",
+          away: "Euskal Herria",
+          stage: "fictional match",
+          score: {
+            home: 5,
+            away: 3
+          }
+        },
+          {
+            id: 2,
+            date: "2018-06-15T15:00:00Z",
+            home: "Wales",
+            away: "Italy",
+            stage: "a match",
+            score: {
+              home: 0,
+              away: 1
+            }
+
+          },
+          {
+            id: 3,
+            date: "2018-06-15T15:00:00Z",
+            home: "France",
+            away: "Belgium",
+            stage: "a match"
+          }]);
+
+        return request(server)
+          .get('/api/user/5')
+          .then(response => response.body.properties.matches)
+          .then(matches => matches.map(x => x.result))
+          .then(results =>
+            expect(results).to.eql(['guessed', 'missed', undefined])
+          );
+      });
 
       it('should be able to update a match prediction', () =>
         request(server)
