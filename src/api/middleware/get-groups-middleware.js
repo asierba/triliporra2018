@@ -1,7 +1,7 @@
 const getGroups = require('../actions/get-groups');
 
-function getGroupsMiddleware(req, res) {
-  getGroups().then(groups => res.send({entities: groups}));
+async function getGroupsMiddleware(req, res) {
+  res.send({entities: await getGroups()});
 }
 
 module.exports = getGroupsMiddleware;
