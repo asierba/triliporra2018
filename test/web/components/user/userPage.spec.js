@@ -75,7 +75,11 @@ describe('userPage', () => {
     moxios.stubRequest(`/api/user/${userId}`, {
       responseText: JSON.stringify({
         properties: {
-          matches
+          matches,
+          'prediction-results' : {
+            guessed: 1,
+            missed: 2
+          },
         }
       })
     });

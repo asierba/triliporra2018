@@ -35,14 +35,14 @@ async function getUser(id) {
   const matches = allMatches
     .map(match => addPrediction(match, matchPredictions, id))
     .map(match => addResult(match));
-  const result = {
+  const predictionResults = {
     guessed: matches.filter(match => match.result === 'guessed').length,
     missed: matches.filter(match => match.result === 'missed').length,
   };
   const user = {
     id,
-    result,
     matches,
+    'prediction-results' : predictionResults,
   };
   return user;
 }
