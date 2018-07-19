@@ -92,28 +92,11 @@ export default class MatchRow extends React.Component {
     );
   }
 }
-
-function getScoreResult(score) {
-  if(score.home > score.away) {
-    return "home";
-  }
-  if(score.home < score.away) {
-    return "away";
-  }
-  return "draw";
-}
-
 function showPredictionResult(match) {
-  const noResult = <span data-id="prediction-result"></span>;
-  const guessedResult = <i className="fas guessed-prediction" data-id="prediction-result"></i>;
-  const missedResult = <i className="fas missed-prediction" data-id="prediction-result"></i>;
+  switch (match.result) {
+    case 'guessed': return <i className="fas guessed-prediction" data-id="prediction-result"></i>;
+    case 'missed': return <i className="fas missed-prediction" data-id="prediction-result"></i>;
+    default: return <span data-id="prediction-result"></span>;
 
-  if (!match.score || !match.prediction) {
-    return noResult;
   }
-
-  if (getScoreResult(match.score) === match.prediction) {
-    return guessedResult;
-  }
-  return missedResult;
 }

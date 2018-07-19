@@ -74,7 +74,8 @@ describe('profilePage', () => {
             home: 1,
             away: 0
           },
-          prediction: 'home'
+          prediction: 'home',
+          result: 'guessed',
         },
         {
           id: 2,
@@ -86,6 +87,7 @@ describe('profilePage', () => {
             home: 3,
             away: 2
           },
+          result: 'missed',
         },
         {
           id: 3,
@@ -97,6 +99,7 @@ describe('profilePage', () => {
             home: 6,
             away: 6
           },
+          result: 'missed',
         },
         {
           id: 4,
@@ -117,11 +120,16 @@ describe('profilePage', () => {
         }
       ];
 
+      const predictionResults = {
+        guessed: 1,
+        missed: 2
+      };
       moxios.stubRequest(`/api/user/${userId}`, {
         responseText: JSON.stringify({
           properties: {
-            matches
-          }
+            matches,
+            "prediction-results": predictionResults,
+          },
         })
       });
 

@@ -169,7 +169,7 @@ describe('user', () => {
           .get('/api/user/5')
           .then(response => response.body)
           .then(body => {
-            expect(body.properties.result).to.eql({
+            expect(body.properties['prediction-results']).to.eql({
               guessed: 2,
               missed: 0
             });
