@@ -1,6 +1,8 @@
 import request from "supertest";
 import expect from "expect.js";
 import createTestServer from "./helpers/createTestServer";
+import {Hypermedia} from "./helpers/hypermedia";
+import {expectToEndWith} from "./helpers/expectExtensions";
 
 describe('root', () => {
   let server;
@@ -22,15 +24,30 @@ describe('root', () => {
         expect(body).to.have.key('version');
       }));
 
-  it('should have link to matches and users', () =>
+  it('should have link to matches', () =>
     request(server)
       .get('/api')
       .then(response => {
         const body = response.body;
-        expect(body.links).to.eql([
-          {'rel': ["matches"], "href": "/api/match"},
-          {'rel': ["users"], "href": "/api/user"},
-          {'rel': ["groups"], "href": "/api/group"},
-        ]);
+        const href = new Hypermedia(body).getHref('matches');
+        expectToEndWith(href, "/api/match");
+      }));
+
+  it('should have link to users', () =>
+    request(server)
+      .get('/api')
+      .then(response => {
+        const body = response.body;
+        const href = new Hypermedia(body).getHref('users');
+        expectToEndWith(href, "/api/user");
+      }));
+
+  it('should have link to groups', () =>
+    request(server)
+      .get('/api')
+      .then(response => {
+        const body = response.body;
+        const href = new Hypermedia(body).getHref('groups');
+        expectToEndWith(href, "/api/group");
       }));
 });
