@@ -3,6 +3,8 @@ import * as stubRepository from "./helpers/stubRepository";
 import mockery from "mockery";
 import request from "supertest";
 import createTestServer from './helpers/createTestServer';
+import {Hypermedia} from "./helpers/hypermedia";
+import {expectToEndWith} from "./helpers/expectExtensions";
 
 describe('user', () => {
   let server;
@@ -203,17 +205,27 @@ describe('user', () => {
       stubRepository.setPredictions(matchPredictions);
     });
 
-    it('should return all users who have match prediction', () =>
+    it('should return all user ids from users with match prediction', () =>
+      request(server)
+        .get('/api/user/')
+        .expect(200)
+        .then(response => response.body.entities)
+        .then(users => users.map(u => u.id))
+        .then(ids =>
+          expect(ids).to.eql([1,2,3])
+        ));
+
+    it('should return liks to user resource', () =>
       request(server)
         .get('/api/user/')
         .expect(200)
         .then(response => response.body.entities)
         .then(users =>
-          expect(users).to.eql([
-            {id: 1},
-            {id: 2},
-            {id: 3},
-          ])
+          users.forEach(user => {
+            const userEntity = new Hypermedia(user)
+            const href = userEntity.getHref('self');
+            expectToEndWith(href, `/api/user/${user.id}`);
+          })
         ));
 
   });
