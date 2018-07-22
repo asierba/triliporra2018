@@ -159,7 +159,7 @@ describe('user', () => {
 
       [
         { score: { home: 5, away: 3}, points: 1}, // 1 guessed
-        { score: { home: 0, away: 3}, points: -1}, // 1 missed
+        { score: { home: 0, away: 3}, points: 0}, // 1 missed
       ].forEach(data =>
       it('should have points based in number of guessed and missed predictions', () => {
         stubRepository.setMatches([{

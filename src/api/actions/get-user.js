@@ -41,7 +41,7 @@ async function getUser(id) {
   };
   const user = {
     id,
-    points: predictionResults.guessed - predictionResults.missed,
+    points: predictionResults.guessed,
     matches,
     'prediction-results' : predictionResults,
   };
