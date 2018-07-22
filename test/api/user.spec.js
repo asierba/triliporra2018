@@ -61,6 +61,14 @@ describe('user', () => {
           expect(body.properties.matches).to.eql(allMatches);
         }));
 
+    it('should have 0 points when no predictions', () =>
+      request(server)
+        .get('/api/user/5')
+        .then(response => response.body)
+        .then(body => {
+          expect(body.properties.points).to.eql(0);
+        }));
+
     it('should have action to update match prediction', () =>
       request(server)
         .get('/api/user/5')
@@ -149,6 +157,23 @@ describe('user', () => {
           );
       });
 
+      [
+        { score: { home: 5, away: 3}, points: 1}, // 1 guessed
+        { score: { home: 0, away: 3}, points: -1}, // 1 missed
+      ].forEach(data =>
+      it('should have points based in number of guessed and missed predictions', () => {
+        stubRepository.setMatches([{
+          id: 1,
+          score: data.score
+        }]);
+
+        return request(server)
+          .get('/api/user/5')
+          .then(response => response.body)
+          .then(body => {
+            expect(body.properties.points).to.eql(data.points);
+          });
+      }));
 
       it('should have general results', () => {
         stubRepository.setMatches([{
