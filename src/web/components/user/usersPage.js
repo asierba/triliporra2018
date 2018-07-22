@@ -13,19 +13,34 @@ export default class UsersPage extends React.Component {
   componentDidMount() {
     axios.get("/api/user")
       .then(response => response.data.entities)
+      .then(users => users.sort((a, b) => b.points - a.points))
       .then(users => this.setState({users}));
   }
   render() {
     return (
       <div className="container-fluid">
-        <h2>All users</h2>
-        <ul>
-        {this.state.users.map((user,index) =>
-          <li key={user.id}>
-            <NavLink activeClassName="active" className="nav-link" to={`/user-${user.id}`}>User {index+1}</NavLink>
-            </li>
-        )}
-        </ul>
+        <h2>Classification</h2>
+        <table className="table">
+          <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">User</th>
+            <th scope="col">Points</th>
+          </tr>
+          </thead>
+          <tbody>
+          {this.state.users.map((user,index) =>
+            <tr key={user.id}>
+              <th>{index+1}</th>
+              <td><NavLink  to={`/user-${user.id}`}>User {index+1}</NavLink>
+              </td>
+              <td>
+              {user.points}
+              </td>
+            </tr>
+          )}
+          </tbody>
+        </table>
       </div>
     );
   }
