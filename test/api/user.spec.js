@@ -240,7 +240,17 @@ describe('user', () => {
           expect(ids).to.eql([1,2,3])
         ));
 
-    it('should return liks to user resource', () =>
+    it('should have points per user', () =>
+      request(server)
+        .get('/api/user/')
+        .expect(200)
+        .then(response => response.body.entities)
+        .then(users => users.map(u => u.points))
+        .then(points =>
+          expect(points).to.eql([0,0,0])
+        ));
+
+    it('should return links to user resource', () =>
       request(server)
         .get('/api/user/')
         .expect(200)
