@@ -158,6 +158,32 @@ describe('user', () => {
       });
 
       [
+        { prediction: 'away', penalties: {home: 4, away: 5}, expectedResult: 'guessed'},
+        { prediction: 'away', penalties: {home: 5, away: 5}, expectedResult: 'missed'},
+        ].forEach(data=>
+      it('should count penalties when calculating prediction results', () => {
+        stubRepository.setPredictions([
+          { matchId: 1, prediction: data.prediction, userId: 5},
+        ]);
+        stubRepository.setMatches([{
+          id: 1,
+          score: {
+            home: 2,
+            away: 2,
+            penalties: data.penalties
+          }
+        }])
+
+        return request(server)
+          .get('/api/user/5')
+          .then(response => response.body.properties.matches)
+          .then(matches => matches.map(x => x.result))
+          .then(results =>
+            expect(results).to.eql([data.expectedResult])
+          );
+      }));;
+
+      [
         { score: { home: 5, away: 3}, points: 1}, // 1 guessed
         { score: { home: 0, away: 3}, points: 0}, // 1 missed
       ].forEach(data =>
