@@ -13,6 +13,10 @@ function addPrediction(match, matchPredictions, userId) {
 }
 
 function getScoreResult(score) {
+  if (score.penalties) {
+    return getScoreResult(score.penalties);
+  }
+
   if (score.home > score.away) {
     return "home";
   }
