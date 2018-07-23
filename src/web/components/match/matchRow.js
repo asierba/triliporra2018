@@ -52,11 +52,18 @@ export default class MatchRow extends React.Component {
   }
 
   showScore() {
+    const printResult = score => `${score.home}-${score.away}`;
+    
     const score = this.state.match.score;
-    if (score) {
-      return `${score.home}-${score.away}`;
+    if (!score) {
+      return "vs";
     }
-    return "vs";
+
+    if (!score.penalties) {
+      return printResult(score);
+    }
+
+    return `${printResult(score)} (${printResult(score.penalties)})`;
   }
 
   showDate() {

@@ -27,4 +27,23 @@ describe("MatchRow", () => {
 
     expect(matchRow.find('[data-id="score"]').text()).to.be("1-2");
   });
+
+  it('should display penalty score when available', () => {
+    const match = {
+      home: 'Brazil',
+      away: 'Russia',
+      stage: 'final',
+      score: {
+        home: 2,
+        away: 2,
+        penalties: {
+          home: 5,
+          away: 4,
+        }
+      }
+    }
+    const matchRow = shallow(<MatchRow match={match}/>);
+
+    expect(matchRow.find('[data-id="score"]').text()).to.be("2-2 (5-4)");
+  });
 });
