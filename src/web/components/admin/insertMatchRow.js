@@ -9,10 +9,7 @@ function showDate(dateAsString) {
 
 function onSave(match) {
   axios.patch(`/api/match/${match.id}`, {
-    score : {
-      home: match.score.home,
-      away: match.score.away
-    }
+    score : match.score
   });
 }
 
@@ -26,7 +23,19 @@ export default class InsertMatchRow extends React.Component {
     const value = event.target.value;
 
     const match = this.state.match;
-    match.score[type] = value;
+
+    if (type === 'penalties-home') {
+      if (!match.score.penalties) match.score.penalties = {};
+      match.score.penalties['home'] = value;
+
+    } else if (type === 'penalties-away') {
+      if (!match.score.penalties) match.score.penalties = {};
+      match.score.penalties['away'] = value;
+    }
+    else {
+      match.score[type] = value;
+    }
+
 
     this.setState( { match :match });
   }
@@ -35,6 +44,9 @@ export default class InsertMatchRow extends React.Component {
     const inputStyle = {
       width: "30px"
     };
+
+    const penaltiesHome = this.state.match.score.penalties ? this.state.match.score.penalties.home : undefined;
+    const penaltiesAway = this.state.match.score.penalties ? this.state.match.score.penalties.away : undefined;
     return (
       <tr key={this.state.match.id}>
         <td>
@@ -45,6 +57,11 @@ export default class InsertMatchRow extends React.Component {
                  onChange={this.changeScore.bind(this, 'home')}/> -
           <input type="text" data-id="score-away" style={inputStyle} value={this.state.match.score.away}
                  onChange={this.changeScore.bind(this, 'away')}/>
+
+          <input type="text" data-id="penalties-home" style={inputStyle} value={penaltiesHome}
+                 onChange={this.changeScore.bind(this, 'penalties-home')}/> -
+          <input type="text" data-id="penalties-away" style={inputStyle} value={penaltiesAway}
+                 onChange={this.changeScore.bind(this, 'penalties-away')}/>
         </td>
         <td>{showDate(this.state.match.date)}</td>
         <td><input type="submit" data-id="save-match" value="Save" className="btn btn-primary"
