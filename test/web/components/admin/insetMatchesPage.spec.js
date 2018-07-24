@@ -47,7 +47,13 @@ describe('InsertMatchesPage', () => {
           id: 2,
           home: 'France',
           away: 'Italy'
-        }];
+        },
+        {
+          id: 1,
+          home: 'Spain',
+          away: 'Belgium',
+          score : { home: 2, away: 2, penalties: { home: 3, away: 4}}
+        },];
 
       moxios.stubRequest('/api/match', {
         responseText: JSON.stringify({entities: matches})
@@ -61,9 +67,9 @@ describe('InsertMatchesPage', () => {
       });
     });
 
-    it('should display list of all matches with scores', () => {
-      expect(matchesPage.find('[data-id="home"]').length).to.be(2);
-      expect(matchesPage.find('[data-id="away"]').length).to.be(2);
+    it('should display list of all matches with scores with penalties', () => {
+      expect(matchesPage.find('[data-id="home"]').length).to.be(3);
+      expect(matchesPage.find('[data-id="away"]').length).to.be(3);
 
       expect(matchesPage.find('[data-id="home"]').at(0).text()).to.be('Brazil');
       expect(matchesPage.find('[data-id="away"]').at(0).text()).to.be('Russia');
@@ -74,6 +80,14 @@ describe('InsertMatchesPage', () => {
       expect(matchesPage.find('[data-id="away"]').at(1).text()).to.be('Italy');
       expect(matchesPage.find('[data-id="score-home"]').at(1).props().value).to.be(undefined);
       expect(matchesPage.find('[data-id="score-away"]').at(1).props().value).to.be(undefined);
+
+      expect(matchesPage.find('[data-id="home"]').at(2).text()).to.be('Spain');
+      expect(matchesPage.find('[data-id="away"]').at(2).text()).to.be('Belgium');
+      expect(matchesPage.find('[data-id="score-home"]').at(2).props().value).to.be(2);
+      expect(matchesPage.find('[data-id="score-away"]').at(2).props().value).to.be(2);
+
+      expect(matchesPage.find('[data-id="penalties-home"]').at(2).props().value).to.be(3);
+      expect(matchesPage.find('[data-id="penalties-away"]').at(2).props().value).to.be(4);
 
     });
 
@@ -87,6 +101,32 @@ describe('InsertMatchesPage', () => {
         const request = moxios.requests.mostRecent();
         expect(request.url).to.eql('/api/match/2');
         expect(request.config.data).to.eql(JSON.stringify({score: { home: 3, away: 2}}));
+        done();
+      });
+    });
+
+    it('should let user to add a match score with penalties', (done) => {
+      matchesPage.find('[data-id="score-home"]').at(1).simulate('change', { target: { value: 2 } });
+      matchesPage.find('[data-id="score-away"]').at(1).simulate('change', { target: { value: 2 } });
+
+      matchesPage.find('[data-id="penalties-home"]').at(1).simulate('change', { target: { value: 5 } });
+      matchesPage.find('[data-id="penalties-away"]').at(1).simulate('change', { target: { value: 4 } });
+
+      matchesPage.find('[data-id="save-match"]').at(1).simulate("click");
+
+      setImmediate(() => {
+        const request = moxios.requests.mostRecent();
+        expect(request.url).to.eql('/api/match/2');
+        expect(request.config.data).to.eql(JSON.stringify({
+          score: {
+            home: 2,
+            away: 2,
+            penalties: {
+              home: 5,
+              away: 4
+            }
+          }
+        }));
         done();
       });
     });
