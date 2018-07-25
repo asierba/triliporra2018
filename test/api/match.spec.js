@@ -102,6 +102,86 @@ describe('match', () => {
           }));
     });
 
+    it('should add score with penalties to a match', () => {
+      const matches = [{
+        id: 1,
+        home: "Catalunya",
+        away: "Euskal Herria",
+      }];
+      stubRepository.setMatches(matches);
+
+      const score = {
+        home: 2,
+        away: 2,
+        penalties: {
+          home: 4,
+          away: 3,
+        }
+      };
+
+      return request(server)
+        .patch('/api/match/1')
+        .send({ score: score})
+        .expect(204)
+        .then(() =>
+          stubRepository.getAll('match').then(matches =>
+            expect(matches).to.eql([
+              {
+                id: 1,
+                home: "Catalunya",
+                away: "Euskal Herria",
+                score: {
+                  home: 2,
+                  away: 2,
+                  penalties: {
+                    home: 4,
+                    away: 3,
+                  }
+                }
+              }
+            ])));
+    });
+
+    it('should remove penalties from score', () => {
+      const matches = [{
+        id: 1,
+        home: "Catalunya",
+        away: "Euskal Herria",
+        score: {
+          home: 2,
+          away: 2,
+          penalties: {
+            home: 4,
+            away: 3,
+          }
+        }
+      }];
+      stubRepository.setMatches(matches);
+
+      const score = {
+        home: 5,
+        away: 2
+      };
+
+      return request(server)
+        .patch('/api/match/1')
+        .send({ score: score})
+        .expect(204)
+        .then(() =>
+          stubRepository.getAll('match').then(matches =>
+            expect(matches).to.eql([
+              {
+                id: 1,
+                home: "Catalunya",
+                away: "Euskal Herria",
+                score: {
+                  home: 5,
+                  away: 2
+                }
+              }
+            ])));
+    });
+
     it('should error when match not found', () =>
       request(server)
         .patch('/api/match/-1')
