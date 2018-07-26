@@ -75,17 +75,22 @@ describe('InsertMatchesPage', () => {
       expect(matchesPage.find('[data-id="away"]').at(0).text()).to.be('Russia');
       expect(matchesPage.find('[data-id="score-home"]').at(0).props().value).to.be(4);
       expect(matchesPage.find('[data-id="score-away"]').at(0).props().value).to.be(6);
+      expect(matchesPage.find('[data-id="has-penalties"]').at(0).props().value).to.be(false);
+
 
       expect(matchesPage.find('[data-id="home"]').at(1).text()).to.be('France');
       expect(matchesPage.find('[data-id="away"]').at(1).text()).to.be('Italy');
       expect(matchesPage.find('[data-id="score-home"]').at(1).props().value).to.be(undefined);
       expect(matchesPage.find('[data-id="score-away"]').at(1).props().value).to.be(undefined);
+      expect(matchesPage.find('[data-id="has-penalties"]').at(1).props().value).to.be(false);
 
       expect(matchesPage.find('[data-id="home"]').at(2).text()).to.be('Spain');
       expect(matchesPage.find('[data-id="away"]').at(2).text()).to.be('Belgium');
       expect(matchesPage.find('[data-id="score-home"]').at(2).props().value).to.be(2);
       expect(matchesPage.find('[data-id="score-away"]').at(2).props().value).to.be(2);
 
+      expect(matchesPage.find('[data-id="has-penalties"]').at(2).props().value).to.be(true);
+      expect(matchesPage.find('[data-id="has-penalties"]').at(2).props().checked).to.be(true);
       expect(matchesPage.find('[data-id="penalties-home"]').at(2).props().value).to.be(3);
       expect(matchesPage.find('[data-id="penalties-away"]').at(2).props().value).to.be(4);
 
@@ -109,6 +114,7 @@ describe('InsertMatchesPage', () => {
       matchesPage.find('[data-id="score-home"]').at(1).simulate('change', { target: { value: 2 } });
       matchesPage.find('[data-id="score-away"]').at(1).simulate('change', { target: { value: 2 } });
 
+      matchesPage.find('[data-id="has-penalties"]').at(1).simulate('change', { target: { checked: true } });
       matchesPage.find('[data-id="penalties-home"]').at(1).simulate('change', { target: { value: 5 } });
       matchesPage.find('[data-id="penalties-away"]').at(1).simulate('change', { target: { value: 4 } });
 
