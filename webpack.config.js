@@ -8,6 +8,10 @@ module.exports = {
   entry: './src/web/main.js',
   devtool: 'inline-source-map',
   mode: 'production',
+  resolve: {
+    extensions: [".ts", ".tsx", ".js", ".jsx"]
+  },
+
   devServer: {
     contentBase: './dist',
     proxy: {
@@ -36,10 +40,10 @@ module.exports = {
         ]
       },
       {
-        test: /\.js$/,
+        test: /\.(t|j)sx?$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: 'awesome-typescript-loader',
           options: {
             presets: ['react']
           }
