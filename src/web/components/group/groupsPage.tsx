@@ -1,8 +1,13 @@
-import React from 'react';
+import * as React from "react"
 import axios from "axios";
-import Group from './group';
+import GroupComponent from './groupComponent';
+import {Group} from "./group";
 
-export default class Routes extends React.Component {
+class State {
+  groups: Group[];
+}
+
+export default class Routes extends React.Component<any, State>  {
   constructor(props){
     super(props);
     this.state = {
@@ -20,7 +25,7 @@ export default class Routes extends React.Component {
     return (
       <div className="container-fluid">
       {this.state.groups.map(group =>
-        <Group name={group.name} teams={group.teams} key={group.name}/>
+        <GroupComponent name={group.name} teams={group.teams} key={group.name}/>
       )}
     </div>)
   }
