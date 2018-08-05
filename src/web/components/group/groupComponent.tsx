@@ -1,7 +1,8 @@
-import React from 'react';
+import * as React from "react"
 import TeamFlag from '../match/teamFlag';
+import {Group} from "./group";
 
-export default function Group(props) {
+export default function GroupComponent(props:Group) {
   const name = props.name;
   const teams = props.teams;
 
