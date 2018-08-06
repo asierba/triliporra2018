@@ -1,10 +1,10 @@
-import React from 'react';
-import expect from 'expect.js';
+import * as React from 'react';
+import * as expect from 'expect.js';
 import {mount} from 'enzyme';
-import moxios from 'moxios'
-import proxyquire from 'proxyquire';
-
-proxyquire.noCallThru();
+import * as moxios from 'moxios'
+import * as Auth from '../../../../src/web/Auth';
+import InsertMatchesPage from "../../../../src/web/components/admin/insertMatchesPage"
+import * as ReactRouter from 'react-router';
 
 function authForAdminUser() {
   return {
@@ -32,9 +32,8 @@ describe('InsertMatchesPage', () => {
     let matchesPage;
 
     beforeEach((done) => {
-      const InsertMatchesPage = proxyquire("../../../../src/web/components/admin/insertMatchesPage", {
-        '../../Auth': authForAdminUser
-      }).default;
+      // @ts-ignore
+      Auth.default = authForAdminUser;
 
       const matches = [
         {
@@ -49,7 +48,7 @@ describe('InsertMatchesPage', () => {
           away: 'Italy'
         },
         {
-          id: 1,
+          id: 3,
           home: 'Spain',
           away: 'Belgium',
           score : { home: 2, away: 2, penalties: { home: 3, away: 4}}
@@ -75,21 +74,21 @@ describe('InsertMatchesPage', () => {
       expect(matchesPage.find('[data-id="away"]').at(0).text()).to.be('Russia');
       expect(matchesPage.find('[data-id="score-home"]').at(0).props().value).to.be(4);
       expect(matchesPage.find('[data-id="score-away"]').at(0).props().value).to.be(6);
-      expect(matchesPage.find('[data-id="has-penalties"]').at(0).props().value).to.be(false);
+      expect(matchesPage.find('[data-id="has-penalties"]').at(0).props().value).to.be('false');
 
 
       expect(matchesPage.find('[data-id="home"]').at(1).text()).to.be('France');
       expect(matchesPage.find('[data-id="away"]').at(1).text()).to.be('Italy');
       expect(matchesPage.find('[data-id="score-home"]').at(1).props().value).to.be(undefined);
       expect(matchesPage.find('[data-id="score-away"]').at(1).props().value).to.be(undefined);
-      expect(matchesPage.find('[data-id="has-penalties"]').at(1).props().value).to.be(false);
+      expect(matchesPage.find('[data-id="has-penalties"]').at(1).props().value).to.be('false');
 
       expect(matchesPage.find('[data-id="home"]').at(2).text()).to.be('Spain');
       expect(matchesPage.find('[data-id="away"]').at(2).text()).to.be('Belgium');
       expect(matchesPage.find('[data-id="score-home"]').at(2).props().value).to.be(2);
       expect(matchesPage.find('[data-id="score-away"]').at(2).props().value).to.be(2);
 
-      expect(matchesPage.find('[data-id="has-penalties"]').at(2).props().value).to.be(true);
+      expect(matchesPage.find('[data-id="has-penalties"]').at(2).props().value).to.be('true');
       expect(matchesPage.find('[data-id="has-penalties"]').at(2).props().checked).to.be(true);
       expect(matchesPage.find('[data-id="penalties-home"]').at(2).props().value).to.be(3);
       expect(matchesPage.find('[data-id="penalties-away"]').at(2).props().value).to.be(4);
@@ -142,16 +141,13 @@ describe('InsertMatchesPage', () => {
     let redirectTo;
 
     beforeEach((done) => {
-      const InsertMatchesPage = proxyquire("../../../../src/web/components/admin/insertMatchesPage", {
-        '../../Auth': authForNoAdminUser,
-        'react-router':  {
-          Redirect: (props) => {
-            redirectTo = props.to;
-            return <div></div>;
-          }
-        }
-      }).default;
-
+      // @ts-ignore
+      Auth.default = authForNoAdminUser;
+      // @ts-ignore
+      ReactRouter.Redirect = (props) => {
+        redirectTo = props.to;
+        return <div></div>;
+      };
       mount(<InsertMatchesPage />);
 
       setImmediate(done);

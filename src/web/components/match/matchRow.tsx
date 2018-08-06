@@ -1,9 +1,9 @@
-import React from 'react';
+import * as React from 'react';
 import TeamFlag from './teamFlag';
 import axios from 'axios';
 import * as Day from '../../day';
 
-export default class MatchRow extends React.Component {
+export default class MatchRow extends React.Component<any,any> {
   constructor(props) {
     super(props);
 
