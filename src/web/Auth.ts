@@ -4,6 +4,7 @@ const subStringAfter = (char) => (string) => string.split(char).slice(-1);
 const subStringAfterPipe = (string) => subStringAfter('|')(string);
 
 export default class Auth {
+  auth0:any;
   constructor() {
     const rootUrl = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
     this.auth0 = new auth0.WebAuth({
@@ -46,6 +47,7 @@ export default class Auth {
   }
 
   isAuthenticated() {
+    // @ts-ignore
     const expiresAt = JSON.parse(localStorage.getItem('expires_at'));
     return new Date().getTime() < expiresAt;
   }
@@ -58,9 +60,9 @@ export default class Auth {
         return;
       }
 
-      this.auth0.client.userInfo(accessToken, (err, profile) => {
-        if (err) {
-          reject(error);
+      this.auth0.client.userInfo(accessToken, (errMessage, profile) => {
+        if (errMessage) {
+          reject(errMessage);
           return;
         }
 
@@ -71,6 +73,7 @@ export default class Auth {
 
   getUserId() {
     return this.getProfile()
+    // @ts-ignore
       .then(profile => profile.sub)
       .then(subStringAfterPipe);
   }

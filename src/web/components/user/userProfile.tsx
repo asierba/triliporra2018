@@ -1,8 +1,8 @@
-import React from "react";
+import * as React from "react";
 import axios from "axios/index";
 import MatchRow from '../match/matchRow';
 
-export default class UserProfile extends React.Component {
+export default class UserProfile extends React.Component<any,any> {
   constructor(props) {
     super(props);
 
@@ -61,6 +61,7 @@ function scrollToToday() {
 
   const todayMatch = document.getElementsByClassName("match-today")[0];
   if (todayMatch) {
+    // @ts-ignore
     window.scroll(0,findPosition(todayMatch));
   }
 }

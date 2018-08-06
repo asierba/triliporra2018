@@ -1,15 +1,13 @@
-import React from 'react';
+import * as React from 'react';
 import Auth from '../../Auth';
 import { Redirect } from 'react-router';
 import UserProfile from './userProfile';
 
-const auth = new Auth();
-
-export default class ProfilePage extends React.Component {
+export default class ProfilePage extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {
-      isAuthenticated: auth.isAuthenticated(),
+      isAuthenticated: new Auth().isAuthenticated(),
       userId: undefined,
     };
   }
@@ -17,7 +15,7 @@ export default class ProfilePage extends React.Component {
   async componentWillMount() {
     const isAuthenticated = this.state.isAuthenticated;
     if (isAuthenticated) {
-      let userId = await auth.getUserId();
+      let userId = await new Auth().getUserId();
       this.setState({
         isAuthenticated: isAuthenticated,
         userId

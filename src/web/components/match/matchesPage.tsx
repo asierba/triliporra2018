@@ -1,5 +1,5 @@
 import './style.css';
-import React from 'react';
+import * as React from 'react';
 import axios from 'axios';
 import MatchRow from './matchRow';
 import * as Day from '../../day';
@@ -11,7 +11,7 @@ const filter = hidePastMatches => matches => {
   return matches.filter(match => Day.isToday(match.date) || !Day.isInThePast(match.date));
 }
 
-export default class MatchesPage extends React.Component {
+export default class MatchesPage extends React.Component<any,any> {
   constructor(props) {
     super(props);
     this.state = {

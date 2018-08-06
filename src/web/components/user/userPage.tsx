@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import UserProfile from './userProfile';
 
 export default function ProfilePage(props) {

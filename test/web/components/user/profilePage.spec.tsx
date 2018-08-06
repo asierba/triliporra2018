@@ -1,13 +1,12 @@
-import React from 'react';
-import expect from 'expect.js';
+import * as React from 'react';
+import * as expect from 'expect.js';
 import {mount} from 'enzyme';
-import moxios from 'moxios'
-import proxyquire from 'proxyquire';
-const profilePagePath = "../../../../src/web/components/user/profilePage";
+import * as moxios from 'moxios'
+import * as Auth from '../../../../src/web/Auth';
+import * as ReactRouter from 'react-router';
+import ProfilePage from "../../../../src/web/components/user/profilePage";
 
-proxyquire.noCallThru();
-
-const authForLoggedInUser = (userId) => () => {
+const authForLoggedInUser = (userId) => function () {
   return {
     isAuthenticated: () => true,
     getUserId: () => Promise.resolve(userId)
@@ -35,15 +34,13 @@ describe('profilePage', () => {
     let redirectTo;
 
     beforeEach((done) => {
-      const ProfilePage = proxyquire(profilePagePath, {
-        '../../Auth': authForNoLoggedInUser,
-        'react-router':  {
-          Redirect: (props) => {
-            redirectTo = props.to;
-            return <div></div>;
-          }
-        }
-      }).default;
+      // @ts-ignore
+      Auth.default = authForNoLoggedInUser;
+      // @ts-ignore
+      ReactRouter.Redirect = (props) => {
+        redirectTo = props.to;
+        return <div></div>;
+      };
 
       mount(<ProfilePage />);
 
@@ -60,9 +57,8 @@ describe('profilePage', () => {
     const userId = 678;
 
     beforeEach((done) => {
-      const ProfilePage = proxyquire(profilePagePath, {
-        '../../Auth': authForLoggedInUser(userId)
-      }).default;
+      // @ts-ignore
+      Auth.default = authForLoggedInUser(userId);
 
       const matches = [
         {
@@ -190,6 +186,8 @@ describe('profilePage', () => {
       expect(profilePage.find('[data-id="num-missed"]').text()).to.eql(2);
     });
 
-    it('should not allow updating predictions of matches in the past');
+    it.skip('should not allow updating predictions of matches in the past', () => {
+      // TODO
+    });
   });
 });

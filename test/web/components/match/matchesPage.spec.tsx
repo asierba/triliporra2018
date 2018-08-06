@@ -1,9 +1,9 @@
-import React from 'react';
+import * as React from 'react';
 import MatchesPage from "../../../../src/web/components/match/matchesPage";
 
-import expect from 'expect.js';
+import * as expect from 'expect.js';
 import {mount} from 'enzyme';
-import moxios from 'moxios'
+import * as moxios from 'moxios'
 
 describe("MatchesPage", () => {
   let matchesPage;

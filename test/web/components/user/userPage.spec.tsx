@@ -1,7 +1,7 @@
-import React from 'react';
-import expect from 'expect.js';
+import * as React from 'react';
+import * as expect from 'expect.js';
 import {mount} from 'enzyme';
-import moxios from 'moxios'
+import * as moxios from 'moxios'
 import UserPage from "../../../../src/web/components/user/userPage";
 
 describe('userPage', () => {
