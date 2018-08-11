@@ -9,6 +9,7 @@
     "build": "webpack",
     "prestart": "npm run build",
     "start": "NODE_ENV=production node src/api/server.js",
+    "just-start": "NODE_ENV=production node src/api/server.js",
     "backend:watch": "nodemon --exec node src/api/server.js",
     "frontend:watch": "webpack-dev-server --open --mode development",
     "prestart:watch": "npm run migrate",

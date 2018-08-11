@@ -1,0 +1,5 @@
+build:
+  pre:
+    npm run prestart
+run:
+  web: npm run just-start
